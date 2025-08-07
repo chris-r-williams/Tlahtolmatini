@@ -1,0 +1,29 @@
+{
+  "name": "tlahtolmatini",
+  "version": "0.0.6",
+  "description": "A morphological analyzer for Nahuatl words",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "debug": "node src/debug.js",
+    "build:js": "webpack",
+    "build": "npm run test && npm run build:js",
+    "prepublishOnly": "npm run build",
+    "lint": "npx eslint . --ext .js",
+    "prebuild-check": "npx npm-check && lint"
+  },
+  "keywords": ["nahuatl", "morphology", "morphological analysis", "mexico", "language", "indigenous", "nlp", "natural language processing"],
+  "author": "Chris Ryan Williams",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@eslint/js": "^9.32.0",
+    "babel-loader": "^10.0.0",
+    "eslint": "^9.32.0",
+    "globals": "^16.3.0",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "type": "module"
+}

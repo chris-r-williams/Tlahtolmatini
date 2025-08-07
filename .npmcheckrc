@@ -1,0 +1,8 @@
+{
+  "depcheck": {
+    "ignoreMatches": [
+      "webpack-cli",
+      "babel-loader"
+    ]
+  }
+}
