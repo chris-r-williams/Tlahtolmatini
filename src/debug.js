@@ -20,8 +20,9 @@ function debug() {
 	
 	// vocabulary
 	//let words = ["tamolnamacac", "tamol", "nenamacac", "mepahuax", "toquichtli", "amoquichtequiuh", "nichpochtli", "tinochpoch", "iacal"]; // lockhart lesson 1
-	let words = ["tlaittalli", "tocihuaxochitl", "notlacualli", "pitzalli", "tlapitzalli", "tlahtolmatini"]; // random words
-		
+	//let words = ["tlaittalli", "tocihuaxochitl", "notlacualli", "pitzalli", "tlapitzalli", "tlahtolmatini"]; // random words
+	let words = ["cua", "tlacua", "nicua", "nitlacua"];
+	
 	words.forEach((word) => {
 		analyze(word);
 	});

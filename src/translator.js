@@ -279,7 +279,8 @@ export class NahuatlTranslator {
                          verbString += 's';
                     }
                 }
-                coreEnglishString += verbString;
+                // Add the verb and append "something" if tla- prefix is present
+                coreEnglishString += verbString + (tlaObjectPresent ? " something" : "");
             }
 
         } else if (allNounStemsDetails.length > 0) {
