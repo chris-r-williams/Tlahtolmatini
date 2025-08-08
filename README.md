@@ -2,6 +2,8 @@
 
 Tlahtolmatini is a morphological analyzer for Nahuatl. It analyzes Nahuatl words and breaks them down into their constituent morphemes, providing detailed grammatical information and a word-level English translation.
 
+Try it out here: https://www.chrishobbyprojects.com/nahuatl/
+
 ## Features
 
 - Morphological analysis of  Nahuatl words
