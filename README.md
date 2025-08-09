@@ -28,7 +28,7 @@ Try it out here: https://www.chrishobbyprojects.com/nahuatl/
 
 - Reduplication. It doesn't know how to parse that.
 
-- Elision. It does know that prefixes like ni/no, ti/to, and mo are sometimes shortened to n, t, and m, respectively, and handles those. But it doesn't know that tlattalli is short for tlattalli (and that's why the test case is tlaittalli and not tlattalli, for now).
+- Elision. It does know that prefixes like ni/no, ti/to, and mo are sometimes shortened to n, t, and m, respectively, and handles those. But it doesn't know that tlattalli is short for tlaittalli (and that's why the test case is tlaittalli and not tlattalli, for now).
 
 ## Building
 
