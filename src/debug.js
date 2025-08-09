@@ -2,13 +2,13 @@ import { NahuatlParser } from './parser.js';
 
 function debug() {
     // grammar
-    //let words = ["tamol"]; // ambiguous words
+    //let words = ["imeuh"]; // ambiguous words
     //let words = ["ahmo", "tlein", "nican"]; // invariable words
 	//let words = ["coyotl", "molli", "cactli", "cacahuatl"]; // singular absolutive suffixes
-	//let words = ["cihuameh", "oquichtin", "cihuah"]; // plural absolutive suffixes
+    //let words = ["ichcame", "cihuameh", "oquichtin", "cihuah"]; // plural absolutive suffixes
 	//let words = ["nitlacatl", "titlacatl", "titlacah", "antlacah", "tlacah"]; // predicate nouns
-	//let words = ["nomol", "mocihuauh", "ichichiuh", "nomolhuan", "mocihuahuan", "ichichihuan"]; // singular possessive prefixes and suffixes
-	//let words = ["tomol", "amocihuauh", "imchichiuh", "tomolhuan", "amocihuahuan", "imchichihuan"]; // plural possessive prefixes and suffixes
+	//let words = ["nomol", "mocihuauh", "ichichiuh", "notlacahuan", "mocihuahuan", "ichichihuan"]; // singular possessive prefixes and suffixes
+	//let words = ["tomol", "amocihuauh", "imchichiuh", "totlacahuan", "amocihuahuan", "imchichihuan"]; // plural possessive prefixes and suffixes
 	//let words = ["cahua", "nechcahua", "mitzcahua", "quicahua", "techcahua", "amechcahua","quincahua"]; // third person singular verbs	
 	//let words = ["cahuah", "nechcahuah", "mitzcahuah", "quicahuah", "techcahuah", "amechcahuah", "quincahuah"]; // third person plural verbs	
 	//let words = ["ticahua", "tinechcahua", "ticcahua", "titechcahua", "tiquincahua"]; // second person singular verbs
@@ -19,9 +19,9 @@ function debug() {
 	//let words = ["ninoitta", "timoitta", "moitta", "titoitta", "ammoitta"]; // reflexive
 	
 	// vocabulary
-	//let words = ["tamolnamacac", "tamol", "nenamacac", "mepahuax", "toquichtli", "amoquichtequiuh", "nichpochtli", "tinochpoch", "iacal"]; // lockhart lesson 1
+	let words = ["tamolnamacac", "tamol", "nenamacac", "mepahuax", "toquichtli", "amoquichtequiuh", "nichpochtli", "tinochpoch", "iacal"]; // lockhart lesson 1
 	//let words = ["tlaittalli", "tocihuaxochitl", "notlacualli", "pitzalli", "tlapitzalli", "tlahtolmatini"]; // random words
-	let words = ["cua", "tlacua", "nicua", "nitlacua"];
+	//let words = ["cua", "tlacua", "nicua", "nitlacua"];
 	
 	words.forEach((word) => {
 		analyze(word);

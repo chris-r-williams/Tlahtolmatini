@@ -75,6 +75,38 @@ export class NahuatlParser {
             const prefixes = p.morphemes.filter(m => m.details.type === 'prefix');
             const stems = p.morphemes.filter(m => m.details.type === 'verb_stem' || m.details.type === 'noun_stem');
             const suffixes = p.morphemes.filter(m => m.details.type === 'suffix');
+            
+            // Find the rightmost (primary) noun stem
+            const primaryNounStem = [...stems].reverse().find(s => s.details.type === 'noun_stem');
+            
+            // Find plural suffixes (explicit ones like -h, -huan, etc.)
+            const pluralSuffixes = suffixes.filter(s => s.details.category === 'plural');
+            
+            // If we have a primary noun stem
+            if (primaryNounStem && !primaryNounStem.details.animate) {
+                // Check if the noun is possessed
+                const hasPossessivePrefix = prefixes.some(p => p.details.role === 'possessive');
+                
+                // Rule 1: An inanimate noun cannot take a plural suffix
+                if (pluralSuffixes.length > 0) {
+                    return false;
+                }
+                
+                // Rule 2: An inanimate noun with no suffixes (implied -h) is invalid
+                // UNLESS it:
+                // a) has absolutive_suffix set to false, OR
+                // b) is possessed (has a possessive prefix)
+                if (suffixes.length === 0 && 
+                    primaryNounStem.details.absolutive_suffix !== false && 
+                    !hasPossessivePrefix) {
+                    return false;
+                }
+            }
+            
+            // Multiple plural suffixes are not allowed on any noun
+            if (pluralSuffixes.length > 1) {
+                return false;
+            }
     
             const hasReflexive = prefixes.some(p => p.details.role === 'reflexive');
             const hasObject = prefixes.some(p => p.details.role === 'object');
@@ -195,20 +227,20 @@ export class NahuatlParser {
     	// Check for known ambiguous words
     	const ambiguousMatch = this.#ambiguousWords.find(entry => entry.word === processedWord);
     	if (ambiguousMatch) {
-        	const parsedMorphemes = ambiguousMatch.parse.map(m => ({
-            	morpheme: orthography === "modern" ? classicalToModern(m.morpheme) : m.morpheme,
-            	details: m.details
-        	}));
-        	const parsing = {
-            	morphemes: parsedMorphemes,
-            	englishTranslation: new NahuatlTranslator(this.#lexicon).generateEnglishTranslation(ambiguousMatch.parse.map(m => ({
-                	morpheme: m.morpheme,
+        	// Handle multiple possible parsings for the ambiguous word
+        	const parsings = ambiguousMatch.parse.map(morphemeSequence => {
+            	const parsedMorphemes = morphemeSequence.map(m => ({
+                	morpheme: orthography === "modern" ? classicalToModern(m.morpheme) : m.morpheme,
                 	details: m.details
-            	})))
-        	};
+            	}));
+            	return {
+                	morphemes: parsedMorphemes,
+                	englishTranslation: new NahuatlTranslator(this.#lexicon).generateEnglishTranslation(morphemeSequence)
+            	};
+        	});
         	return {
             	success: true,
-            	parsings: [parsing]
+            	parsings: parsings
         	};
     	}
 	
