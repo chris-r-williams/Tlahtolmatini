@@ -39,7 +39,7 @@ npm run build
 ## Usage
 
 ```javascript
-import { NahuatlParser } from 'tlahtolmatini';
+import { NahuatlParser, classicalToModern, modernToClassical } from 'tlahtolmatini';
 
 const parser = new NahuatlParser();
 
@@ -63,6 +63,13 @@ console.log(result);
 // Analyze a word in modern orthography
 const modernResult = parser.analyze('nitlakwa', 'modern');
 console.log(modernResult);
+
+// Convert between orthographies
+const toModern = parser.classicalToModern('cuauhtemoc');
+console.log(toModern); // Output: 'kwawtemok'
+
+const toClassical = parser.modernToClassical('nikchiwa');
+console.log(toClassical); // Output: 'nicchihua'
 ```
 
 ## License
