@@ -19,13 +19,19 @@ function debug() {
 	//let words = ["ninoitta", "timoitta", "moitta", "titoitta", "ammoitta"]; // reflexive
 	
 	// vocabulary
-	let words = ["tamolnamacac", "tamol", "nenamacac", "mepahuax", "toquichtli", "amoquichtequiuh", "nichpochtli", "tinochpoch", "iacal"]; // lockhart lesson 1
+	//let words = ["tamolnamacac", "tamol", "nenamacac", "mepahuax", "toquichtli", "amoquichtequiuh", "nichpochtli", "tinochpoch", "iacal"]; // lockhart lesson 1
 	//let words = ["tlaittalli", "tocihuaxochitl", "notlacualli", "pitzalli", "tlapitzalli", "tlahtolmatini"]; // random words
 	//let words = ["cua", "tlacua", "nicua", "nitlacua"];
-	
+	//const words = ["atl", "etl", "ichkatl", "ohtli", "pamitl", "tocatl", "cacaoh", "lemeni", "tomin", "nesi", "ehecatl", "hueyi", "yayahuic", "ce", "chahuistli", "xoxoctic", "tzapotl", "tlalli", "cuahuitl", "noteco", "tonatiuh", "nocniuh", "necuhtli", "nicnequi", "niccaqui", "canin", "mocauhqui", "quitzauhcuhqui", "tlacualli", "teczistli", "chichi", "notlacauh", "nocihuauh", "tototl"]; // garcia, learn nahuat, 1. pronunciation
+	const words = ["tlaittalli"];
+	const numWords = words.length;
+	let successful = 0;
+
 	words.forEach((word) => {
-		analyze(word);
+		if(analyze(word)) successful++;
 	});
+
+	console.log(`\n${successful}/${numWords} successful parsings`);
 }
 
 // Debug test case
@@ -56,6 +62,8 @@ function analyze(input) {
     } else {
         console.log("Parse failed:", result.error);
     }
+
+	return result.success;
 }
 
 // Run the debug function

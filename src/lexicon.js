@@ -135,6 +135,7 @@ export const nahuatlLexicon = [
     { morpheme: "za", type: "verb_stem", english: "say", past: "said", pp: "said" },
 
     // Noun Stems
+    //{ morpheme: "a", type: "noun_stem", english: "water", countable: false, animate: false },
     { morpheme: "acal", type: "noun_stem", english: "boat", countable: true, animate: false },
     { morpheme: "amanal", type: "noun_stem", english: "pond", countable: true, animate: false },
     { morpheme: "amol", type: "noun_stem", english: "soap", countable: true, animate: false },
@@ -158,7 +159,6 @@ export const nahuatlLexicon = [
     { morpheme: "meca", type: "noun_stem", english: "rope", countable: true, animate: false },
     { morpheme: "michin", type: "noun_stem", english: "fish", countable: true, animate: true, absolutive_suffix: false },
     { morpheme: "mol", type: "noun_stem", english: "sauce", countable: true, animate: false },
-    { morpheme: "nacac", type: "noun_stem", english: "seller", countable: true, animate: false },
     { morpheme: "namacac", type: "noun_stem", english: "seller", countable: true, animate: true, absolutive_suffix: false },
     { morpheme: "on", type: "noun_stem", english: "two", countable: false, animate: false },
     { morpheme: "oquich", type: "noun_stem", english: "man", english_plural: "men", countable: true, animate: true },
@@ -167,6 +167,8 @@ export const nahuatlLexicon = [
     { morpheme: "pil", type: "noun_stem", english: "noble", countable: true, animate: true },
     { morpheme: "pitzo", type: "noun_stem", english: "pig", countable: true, animate: true },
     { morpheme: "te", type: "noun_stem", english: "stone", countable: true, animate: false },
+    { morpheme: "tecuh", type: "noun_stem", english: "lord", countable: true, animate: true },
+    { morpheme: "tecoh", type: "noun_stem", english: "lord", countable: true, animate: true },    
     { morpheme: "tepe", type: "noun_stem", english: "hill", countable: true, animate: false },
     { morpheme: "tequi", type: "noun_stem", english: "work", countable: false, animate: false },
     { morpheme: "tiyanquiz", type: "noun_stem", english: "market", countable: true, animate: false },
@@ -207,7 +209,6 @@ export const nahuatlLexicon = [
     { morpheme: "ton", type: "suffix", category: "diminutive", english_prefix: "small " },
     { morpheme: "tza", type: "suffix", category: "imperfect", english_suffix: "ing" },
     { morpheme: "tzin", type: "suffix", category: "honorific", english_prefix: "respected " },
-    { morpheme: "tzintli", type: "suffix", category: "absolutive", nominalizing: true, countable: true },
     { morpheme: "uh", type: "suffix", category: "possessive" },
     { morpheme: "xoh", type: "suffix", category: "qualifier", english_prefix: "full of " },
     { morpheme: "ya", type: "suffix", category: "imperfect", english_suffix: "ing" },
