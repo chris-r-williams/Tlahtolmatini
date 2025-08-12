@@ -171,20 +171,6 @@ export class MorphemeValidator {
             return false;
         }
 
-        // Rule 4: Invalid possessive interpretation without actual possessive prefix
-        if (!this.#validatePossessiveTranslation(parsing, hasPossessive, hasObject)) {
-            return false;
-        }
-
-        // Rule 5: Verb stem treated as noun without nominalizing suffix
-        if (hasVerbStem && !hasNounStem && !hasNominalizingSuffix) {
-            if (parsing.englishTranslation && 
-                (parsing.englishTranslation.startsWith("(it is)") || 
-                 parsing.englishTranslation.startsWith("(they are)"))) {
-                return false;
-            }
-        }
-
         return true;
     }
 
@@ -211,24 +197,6 @@ export class MorphemeValidator {
                     return false;
                 }
             }
-        }
-        return true;
-    }
-
-    /**
-     * Validates possessive interpretations in translations
-     */
-    #validatePossessiveTranslation(parsing, hasPossessive, hasObject) {
-        if (!hasPossessive && parsing.englishTranslation && 
-            (parsing.englishTranslation.includes("his/her/its") || 
-             parsing.englishTranslation.includes("their") ||
-             parsing.englishTranslation.includes("my") ||
-             parsing.englishTranslation.includes("your") ||
-             parsing.englishTranslation.includes("our")) &&
-            !parsing.englishTranslation.includes("leave") && // Don't filter valid object pronouns in verbs
-            !parsing.englishTranslation.includes("see") &&
-            !hasObject) { // Allow object pronouns like "him/her/it"
-            return false;
         }
         return true;
     }
