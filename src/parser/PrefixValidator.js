@@ -89,21 +89,20 @@ export class PrefixValidator {
         );
         
         const hasHuanSuffix = suffixes.some(s => s.morpheme === "huan");
-        const hasNounStem = state.stems.some(s => s.type === "noun_stem");
-        const hasVerbStem = state.stems.some(s => s.type === "verb_stem");
-        const hasIrregularNoun = state.stems.some(s => 
-            s.type === "noun_stem" && s.absolutive_suffix === false
-        );
+        const primaryStem = this.#getPrimaryStem(state.stems);
+        const hasPrimaryNounStem = primaryStem?.type === "noun_stem";
+        const hasPrimaryVerbStem = primaryStem?.type === "verb_stem";
+        const hasIrregularNoun = primaryStem?.type === "noun_stem" && primaryStem.absolutive_suffix === false;
         
         if (prefix.role === "subject") {
-            const validForNoun = ((hasAbsolutiveSuffix && hasNounStem) || 
+            const validForNoun = ((hasAbsolutiveSuffix && hasPrimaryNounStem) || 
                                 (hasIrregularNoun && !hasAbsolutiveSuffix));
-            const validForVerb = hasVerbStem;
+            const validForVerb = hasPrimaryVerbStem;
             
             return (validForNoun || validForVerb) && this.isValidPrefixOrder(prefix, state);
         } 
         else if (prefix.role === "possessive") {
-            const isValidPossessive = hasNounStem && (
+            const isValidPossessive = hasPrimaryNounStem && (
                 hasHuanSuffix || 
                 (!hasAbsolutiveSuffix && !hasIrregularNoun) ||
                 (hasIrregularNoun && !hasAbsolutiveSuffix)
@@ -142,24 +141,25 @@ export class PrefixValidator {
             return false;
         }
 
-        const hasNounStem = state.stems.some(s => s.type === "noun_stem");
-        const hasVerbStem = state.stems.some(s => s.type === "verb_stem");
+        const primaryStem = this.#getPrimaryStem(state.stems);
+        const hasPrimaryNounStem = primaryStem?.type === "noun_stem";
+        const hasPrimaryVerbStem = primaryStem?.type === "verb_stem";
         const hasNominalizingSuffix = this.#hasNominalizingSuffix(suffixes);
 
         if (prefix.used_with) {
-            if (prefix.used_with === 'noun' && !hasNounStem && !hasNominalizingSuffix) {
+            if (prefix.used_with === 'noun' && !hasPrimaryNounStem && !hasNominalizingSuffix) {
                 return false;
             }
-            if (prefix.used_with === 'verb' && (!hasVerbStem || hasNominalizingSuffix)) {
+            if (prefix.used_with === 'verb' && (!hasPrimaryVerbStem || hasNominalizingSuffix)) {
                 return false;
             }
         }
 
-        if (hasNounStem || hasNominalizingSuffix) {
+        if (hasPrimaryNounStem || hasNominalizingSuffix) {
             return prefix.role === "possessive";
         }
         
-        if (hasVerbStem && !hasNominalizingSuffix) {
+        if (hasPrimaryVerbStem && !hasNominalizingSuffix) {
             if (prefix.role !== "reflexive") {
                 return false;
             }
@@ -205,5 +205,15 @@ export class PrefixValidator {
             suffix.nominalizing || 
             nominalizingSuffixMorphemes.has(suffix.morpheme)
         );
+    }
+
+    /**
+     * Gets the primary (rightmost) stem from a list of stems
+     * @param {Array} stems - Array of stems
+     * @returns {Object|null} The primary stem or null if no stems
+     */
+    #getPrimaryStem(stems) {
+        if (!stems || stems.length === 0) return null;
+        return stems[stems.length - 1];
     }
 }

@@ -25,7 +25,7 @@ export class MorphemeValidator {
             if (!this.#validateInanimateNounRules(primaryStem, prefixes, suffixes)) return false;
             if (!this.#validatePrefixRules(prefixes)) return false;
             if (!this.#validateSuffixRules(pluralSuffixes)) return false;
-            if (!this.#validateContextRules(p, prefixes, stems, suffixes)) return false;
+            if (!this.#validateContextRules(p, prefixes, stems, suffixes, primaryStem)) return false;
             
             return true;
         });
@@ -139,22 +139,22 @@ export class MorphemeValidator {
     /**
      * Validates context-dependent rules about morpheme combinations
      */
-    #validateContextRules(parsing, prefixes, stems, suffixes) {
+    #validateContextRules(parsing, prefixes, stems, suffixes, primaryStem) {
         const hasReflexive = prefixes.some(p => p.details.role === 'reflexive');
         const hasObject = prefixes.some(p => p.details.role === 'object');
         const hasPossessive = prefixes.some(p => p.details.role === 'possessive');
         const hasSubject = prefixes.some(p => p.details.role === 'subject');
-        const hasVerbStem = stems.some(s => s.details.type === 'verb_stem');
-        const hasNounStem = stems.some(s => s.details.type === 'noun_stem');
+        const hasPrimaryVerbStem = primaryStem?.details.type === 'verb_stem';
+        const hasPrimaryNounStem = primaryStem?.details.type === 'noun_stem';
         const hasNominalizingSuffix = this.#hasNominalizingSuffix(suffixes.map(s => s.details));
 
         // Rule 1: Context-dependent prefix usage validation
         for (const prefix of prefixes) {
             if (prefix.details.used_with) {
-                if (prefix.details.used_with === 'noun' && !hasNounStem && !hasNominalizingSuffix) {
+                if (prefix.details.used_with === 'noun' && !hasPrimaryNounStem && !hasNominalizingSuffix) {
                     return false;
                 }
-                if (prefix.details.used_with === 'verb' && (!hasVerbStem || hasNominalizingSuffix)) {
+                if (prefix.details.used_with === 'verb' && (!hasPrimaryVerbStem || hasNominalizingSuffix)) {
                     return false;
                 }
             }
