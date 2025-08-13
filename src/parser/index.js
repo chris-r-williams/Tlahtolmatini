@@ -121,8 +121,11 @@ export class NahuatlParser {
         let excludedMorphemes = new Set();
         let firstPassMorphemes = [];
         let allParses = null;
+        let maxAttempts = 20; // Prevent infinite loops
+        let attempts = 0;
         
         do {
+            attempts++;
             const result = this.#backtrackingParser.parseSuffixesRecursively(
                 word, 
                 [], 
@@ -132,30 +135,60 @@ export class NahuatlParser {
             );
             
             allParses = result.validParses;
+            
+            // Store morphemes from first pass
             if (firstPassMorphemes.length === 0) {
-                firstPassMorphemes = result.identifiedMorphemes;
+                firstPassMorphemes = [...result.identifiedMorphemes];
+            }
+            
+            // If we have valid parses, check if they pass validation
+            if (allParses && allParses.length > 0) {
+                const testParsings = allParses.map(parse => ({
+                    morphemes: [
+                        ...parse.prefixes.map(p => ({ morpheme: p.morpheme, details: p })),
+                        ...parse.stems.map(s => ({ morpheme: s.morpheme, details: s })),
+                        ...parse.suffixes.map(s => ({ morpheme: s.morpheme, details: s }))
+                    ]
+                }));
+                
+                const validParsings = this.#morphemeValidator.filterInvalidCombinations(testParsings);
+                
+                if (validParsings.length > 0) {
+                    // We found valid parsings, return them
+                    break;
+                }
+                
+                // No valid parsings after validation, continue backtracking
+                allParses = null;
             }
             
             if (!allParses || allParses.length === 0) {
-                const rightmostMorpheme = this.#findNextMorphemeToExclude(
+                const nextMorphemeToExclude = this.#findNextMorphemeToExclude(
                     firstPassMorphemes, 
                     excludedMorphemes
                 );
                 
-                if (rightmostMorpheme) {
-                    excludedMorphemes.add(rightmostMorpheme.key);
+                if (nextMorphemeToExclude) {
+                    excludedMorphemes.add(nextMorphemeToExclude.key);
                 } else {
+                    // No more morphemes to exclude
                     break;
                 }
             }
         } while ((!allParses || allParses.length === 0) && 
-                 excludedMorphemes.size < firstPassMorphemes.length);
+                 excludedMorphemes.size < firstPassMorphemes.length && 
+                 attempts < maxAttempts);
 
         if (!allParses || allParses.length === 0) {
             return { 
                 success: false, 
-                error: `Failed to find a complete and valid morpheme parse for '${word}'.`,
-                parsings: []
+                error: `Failed to find a complete and valid morpheme parse for '${word}' after ${attempts} attempts.`,
+                parsings: [],
+                debug: {
+                    firstPassMorphemes: firstPassMorphemes.map(m => `${m.morpheme}(${m.type})`),
+                    excludedMorphemes: Array.from(excludedMorphemes),
+                    attempts
+                }
             };
         }
 
@@ -163,14 +196,35 @@ export class NahuatlParser {
     }
 
     /**
-     * Finds the next morpheme to exclude in backtracking
+     * Improved logic for finding the next morpheme to exclude in backtracking
+     * Now properly cycles through morphemes in order of likelihood to cause conflicts
      */
     #findNextMorphemeToExclude(morphemes, excluded) {
-        for (let i = morphemes.length - 1; i >= 0; i--) {
-            if (!excluded.has(morphemes[i].key)) {
-                return morphemes[i];
+        // Sort morphemes by position (rightmost first, as they're parsed first)
+        const sortedMorphemes = [...morphemes].sort((a, b) => b.position - a.position);
+        
+        // First, try excluding suffixes from right to left
+        for (const morpheme of sortedMorphemes) {
+            if (morpheme.type === 'suffix' && !excluded.has(morpheme.key)) {
+                return morpheme;
             }
         }
+        
+        // Then try excluding stems from right to left
+        for (const morpheme of sortedMorphemes) {
+            if ((morpheme.type === 'verb_stem' || morpheme.type === 'noun_stem') && !excluded.has(morpheme.key)) {
+                return morpheme;
+            }
+        }
+        
+        // Finally try excluding prefixes from left to right
+        const sortedByPosition = [...morphemes].sort((a, b) => a.position - b.position);
+        for (const morpheme of sortedByPosition) {
+            if (morpheme.type === 'prefix' && !excluded.has(morpheme.key)) {
+                return morpheme;
+            }
+        }
+        
         return null;
     }
 
