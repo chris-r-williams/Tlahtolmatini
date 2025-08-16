@@ -19,4 +19,13 @@ export const knownAmbiguousWords = [
       ],
     ],
   },
+  {
+    word: 'nocniuh',
+    parse: [
+      [
+        { morpheme: 'no', details: nahuatlLexicon.find((m) => m.morpheme === 'no' && m.type === 'prefix') },
+        { morpheme: 'cniuh', details: nahuatlLexicon.find((m) => m.morpheme === 'icniuh' && m.type === 'noun_stem') },
+      ],
+    ],
+  },
 ];

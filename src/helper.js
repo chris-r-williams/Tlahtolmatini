@@ -28,9 +28,10 @@ export const pluralSuffixMorphemes = new Set(
  * @param {string} word - Word in modern Nahuatl orthography
  * @returns {string} Word converted to classical orthography
  */
-export function modernToClassical (word) {
+export function modernToClassical(word) {
   // Remove macrons and any other diacritical marks
-  let classical = word.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  let classical = word.toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
   return (
     	(classical = classical.replaceAll('iwkin', 'yuhquin')),
     (classical = classical.replaceAll('kis', 'quiz')),
@@ -65,9 +66,10 @@ export function modernToClassical (word) {
  * @param {string} morpheme - Morpheme in classical Nahuatl orthography
  * @returns {string} Morpheme converted to modern orthography
  */
-export function classicalToModern (morpheme) {
+export function classicalToModern(morpheme) {
   // remove macrons and any other diacritical marks
-  let modern = morpheme.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  let modern = morpheme.toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
   return (
     (modern = modern.replaceAll('z', 's')),
     (modern = modern.replaceAll('yuh', 'iw')),

@@ -40,18 +40,24 @@ export class NahuatlParser {
 
     // Check for known ambiguous words
     const ambiguousMatch = this.#handleAmbiguousWord(processedWord, orthography);
-    if (ambiguousMatch) {return ambiguousMatch;}
+    if (ambiguousMatch) {
+      return ambiguousMatch;
+    }
 
     // Check for invariable morphemes
     const invariableMatch = this.#handleInvariableWord(processedWord, orthography);
-    if (invariableMatch) {return invariableMatch;}
+    if (invariableMatch) {
+      return invariableMatch;
+    }
 
     // Determine if the word starts with an imperative prefix
     const isImperativeContext = this.#isImperativeContext(processedWord);
 
     // Parse with backtracking
     const parseResult = this.#parseWithBacktracking(processedWord, isImperativeContext);
-    if (!parseResult.success) {return parseResult;}
+    if (!parseResult.success) {
+      return parseResult;
+    }
 
     // Convert and validate the parsings
     return this.#processAndValidateParsings(parseResult.parsings, orthography);
@@ -84,7 +90,9 @@ export class NahuatlParser {
     const invariables = this.#lexicon.filter((m) =>
       m.type === 'particle' ||
             m.type === 'interrogative' ||
-            m.type === 'adverb',
+            m.type === 'adverb' ||
+            m.type === 'adjective' ||
+            m.type === 'interjection',
     );
     const match = invariables.find((m) => m.morpheme === word);
     if (match) {
@@ -279,7 +287,9 @@ export class NahuatlParser {
         number: m.details.number,
       })));
 
-      if (seen.has(key)) {return false;}
+      if (seen.has(key)) {
+        return false;
+      }
       seen.add(key);
       return true;
     });

@@ -54,14 +54,21 @@ export class NahuatlTranslator {
       if (details.type === 'prefix') {
         if (details.role === 'subject') {
           subjectPrefixDetails = details;
-        }
-        else if (details.role === 'object' && morpheme !== 'tla' && morpheme !== 'te') {objectPrefixDetails = details;}
-        else if (details.role === 'possessive') {possessivePrefixDetails = details;}
-        else if (details.role === 'reflexive') {reflexivePrefixDetails = details;}
-        else if (details.role === 'negation') {negationPrefixDetails = details;}
-        else if (details.category === 'imperative') {imperativePrefixDetails = details;}
-        else if (morpheme === 'tla' && details.role === 'object') {tlaObjectPresent = true;}
-        else if (morpheme === 'te' && details.role === 'object') {teObjectPresent = true;} // For 'te' impersonal object prefix
+        } else if (details.role === 'object' && morpheme !== 'tla' && morpheme !== 'te') {
+          objectPrefixDetails = details;
+        } else if (details.role === 'possessive') {
+          possessivePrefixDetails = details;
+        } else if (details.role === 'reflexive') {
+          reflexivePrefixDetails = details;
+        } else if (details.role === 'negation') {
+          negationPrefixDetails = details;
+        } else if (details.category === 'imperative') {
+          imperativePrefixDetails = details;
+        } else if (morpheme === 'tla' && details.role === 'object') {
+          tlaObjectPresent = true;
+        } else if (morpheme === 'te' && details.role === 'object') {
+          teObjectPresent = true;
+        } // For 'te' impersonal object prefix
       } else if (details.type === 'verb_stem') {
         mainVerbStemDetails = details;
       } else if (details.type === 'noun_stem') {
@@ -70,10 +77,14 @@ export class NahuatlTranslator {
         // The rightmost noun stem is the primary one
         primaryNounStemDetails = details;
       } else if (details.type === 'suffix') {
-        if (details.category === 'imperfect') {isImperfectVerb = true;}
+        if (details.category === 'imperfect') {
+          isImperfectVerb = true;
+        }
         if (details.nominalizing) {
           // Check for specific nominalizing suffixes
-          if (morpheme === 'lli') {isLliParticiple = true;}
+          if (morpheme === 'lli') {
+            isLliParticiple = true;
+          }
           if (morpheme === 'ni') {
             // 'ni' as agentive noun, not just any nominalizing suffix
             isNominalizedByOtherSuffix = true;
@@ -409,12 +420,19 @@ export class NahuatlTranslator {
       } else if (allNounStemsDetails.length > 0 || isLliParticiple || isNominalizedByOtherSuffix) {
         // For "ni-tlah-tla-tol-matini" -> "I am a word-knower"
         let copulaVerb = 'is';
-        if (subjectPrefixDetails.english === 'I') {copulaVerb = 'am';}
-        else if (subjectPrefixDetails.english === 'you (sg)') {copulaVerb = 'are';}
-        else if (subjectPrefixDetails.english === 'we') {copulaVerb = 'are';}
-        else if (subjectPrefixDetails.english === 'you (pl)') {copulaVerb = 'are';}
-        else if (subjectPrefixDetails.english === 'he/she/it' && subjectPrefixDetails.plural) {copulaVerb = 'are';}
-        else if (subjectPrefixDetails.english === 'he/she/it') {copulaVerb = 'is';}
+        if (subjectPrefixDetails.english === 'I') {
+          copulaVerb = 'am';
+        } else if (subjectPrefixDetails.english === 'you (sg)') {
+          copulaVerb = 'are';
+        } else if (subjectPrefixDetails.english === 'we') {
+          copulaVerb = 'are';
+        } else if (subjectPrefixDetails.english === 'you (pl)') {
+          copulaVerb = 'are';
+        } else if (subjectPrefixDetails.english === 'he/she/it' && subjectPrefixDetails.plural) {
+          copulaVerb = 'are';
+        } else if (subjectPrefixDetails.english === 'he/she/it') {
+          copulaVerb = 'is';
+        }
 
         let addArticleA = false;
         if (primaryNounStemDetails && primaryNounStemDetails.countable && !hasPluralSuffix && !hasNounStemBeforeVerb) {
@@ -443,6 +461,7 @@ export class NahuatlTranslator {
     }
 
     // Robust return to ensure a string is always returned
-    return String(finalTranslation || '').trim().replace(/\s+/g, ' ');
+    return String(finalTranslation || '').trim()
+      .replace(/\s+/g, ' ');
   }
 }

@@ -100,8 +100,7 @@ export class PrefixValidator {
       const validForVerb = hasPrimaryVerbStem;
 
       return (validForNoun || validForVerb) && this.isValidPrefixOrder(prefix, state);
-    }
-    else if (prefix.role === 'possessive') {
+    } else if (prefix.role === 'possessive') {
       const isValidPossessive = hasPrimaryNounStem && (
         hasHuanSuffix ||
                 (!hasAbsolutiveSuffix && !hasIrregularNoun) ||
@@ -213,7 +212,9 @@ export class PrefixValidator {
      * @returns {Object|null} The primary stem or null if no stems
      */
   #getPrimaryStem(stems) {
-    if (!stems || stems.length === 0) {return null;}
+    if (!stems || stems.length === 0) {
+      return null;
+    }
     return stems[stems.length - 1];
   }
 }

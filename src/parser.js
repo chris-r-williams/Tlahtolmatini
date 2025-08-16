@@ -1,1 +1,0 @@
-export { NahuatlParser } from './parser/index.js';

@@ -21,11 +21,21 @@ export class MorphemeValidator {
       // Find plural suffixes (explicit ones like -h, -huan, etc.)
       const pluralSuffixes = suffixes.filter((s) => s.details.category === 'plural');
 
-      if (!this.#validateStemRules(primaryStem, prefixes, suffixes)) {return false;}
-      if (!this.#validateInanimateNounRules(primaryStem, prefixes, suffixes)) {return false;}
-      if (!this.#validatePrefixRules(prefixes)) {return false;}
-      if (!this.#validateSuffixRules(pluralSuffixes)) {return false;}
-      if (!this.#validateContextRules(p, prefixes, stems, suffixes, primaryStem)) {return false;}
+      if (!this.#validateStemRules(primaryStem, prefixes, suffixes)) {
+        return false;
+      }
+      if (!this.#validateInanimateNounRules(primaryStem, prefixes, suffixes)) {
+        return false;
+      }
+      if (!this.#validatePrefixRules(prefixes)) {
+        return false;
+      }
+      if (!this.#validateSuffixRules(pluralSuffixes)) {
+        return false;
+      }
+      if (!this.#validateContextRules(p, prefixes, stems, suffixes, primaryStem)) {
+        return false;
+      }
 
       return true;
     });
@@ -35,7 +45,9 @@ export class MorphemeValidator {
      * Validates rules related to stem type and allowed affixes
      */
   #validateStemRules(primaryStem, prefixes, suffixes) {
-    if (!primaryStem) {return false;}
+    if (!primaryStem) {
+      return false;
+    }
 
     // If primary stem is a verb stem, it cannot take absolutive suffixes
     if (primaryStem.details.type === 'verb_stem') {

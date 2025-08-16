@@ -6,7 +6,7 @@ import { NahuatlParser } from '../src/index.js';
 const parser = new NahuatlParser();
 
 test('Morphologically ambiguous words', () => {
-  assert.strictEqual(JSON.stringify(parser.analyze('imeuh')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"i","details":{"morpheme":"i","type":"prefix","role":"possessive","person":"third","number":"singular","english":"his/her/its","usedWith":"noun"}},{"morpheme":"me","details":{"morpheme":"me","type":"noun_stem","english":"mageuy","countable":true,"animate":false}},{"morpheme":"uh","details":{"morpheme":"uh","type":"suffix","category":"possessive"}}],"englishTranslation":"(it is) his/her/its mageuy"},{"morphemes":[{"morpheme":"im","details":{"morpheme":"im","type":"prefix","role":"possessive","person":"third","number":"plural","english":"their","usedWith":"noun"}},{"morpheme":"e","details":{"morpheme":"e","type":"noun_stem","english":"bean","countable":true,"animate":false}},{"morpheme":"uh","details":{"morpheme":"uh","type":"suffix","category":"possessive"}}],"englishTranslation":"(it is) their bean"}]}', 'imeuh');
+  assert.strictEqual(JSON.stringify(parser.analyze('noteco')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"no","details":{"morpheme":"no","type":"prefix","role":"possessive","person":"first","number":"singular","english":"my","usedWith":"noun"}},{"morpheme":"teco","details":{"morpheme":"tecoh","type":"noun_stem","english":"lord","countable":true,"animate":true}}],"englishTranslation":"(it is) my lord"}]}', 'noteco');
 });
 
 test('Invariable words', () => {
@@ -46,7 +46,6 @@ test('Singular possessive prefixes and suffixes', () => {
   assert.strictEqual(JSON.stringify(parser.analyze('ichichihuan')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"i","details":{"morpheme":"i","type":"prefix","role":"possessive","person":"third","number":"singular","english":"his/her/its","usedWith":"noun"}},{"morpheme":"chichi","details":{"morpheme":"chichi","type":"noun_stem","english":"dog","countable":true,"animate":true}},{"morpheme":"huan","details":{"morpheme":"huan","type":"suffix","category":"plural"}}],"englishTranslation":"(they are) his/her/its dogs"}]}', 'i- -huan');
 });
 
-
 test('Plural possessive prefixes and suffixes', () => {
   assert.strictEqual(JSON.stringify(parser.analyze('tomol')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"to","details":{"morpheme":"to","type":"prefix","role":"possessive","person":"first","number":"plural","english":"our","usedWith":"noun"}},{"morpheme":"mol","details":{"morpheme":"mol","type":"noun_stem","english":"sauce","countable":true,"animate":false}}],"englishTranslation":"(it is) our sauce"}]}', 'to-');
   assert.strictEqual(JSON.stringify(parser.analyze('amocihuauh')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"amo","details":{"morpheme":"amo","type":"prefix","role":"possessive","person":"second","number":"plural","english":"your (pl)","usedWith":"noun"}},{"morpheme":"cihua","details":{"morpheme":"cihua","type":"noun_stem","english":"woman","englishPlural":"women","countable":true,"animate":true}},{"morpheme":"uh","details":{"morpheme":"uh","type":"suffix","category":"possessive"}}],"englishTranslation":"(it is) your (pl) woman"}]}', 'amo- -uh');
@@ -65,7 +64,6 @@ test('Third person singular verbs', () => {
   assert.strictEqual(JSON.stringify(parser.analyze('amechcahua')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"amech","details":{"morpheme":"amech","type":"prefix","role":"object","person":"second","number":"plural","english":"you (pl)"}},{"morpheme":"cahua","details":{"morpheme":"cahua","type":"verb_stem","english":"leave","past":"left","pp":"left"}}],"englishTranslation":"he/she/it leaves you (pl)"}]}', 'mitz');
   assert.strictEqual(JSON.stringify(parser.analyze('quincahua')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"quin","details":{"morpheme":"quin","type":"prefix","role":"object","person":"third","number":"plural","english":"them"}},{"morpheme":"cahua","details":{"morpheme":"cahua","type":"verb_stem","english":"leave","past":"left","pp":"left"}}],"englishTranslation":"he/she/it leaves them"}]}', 'mitz');
 });
-
 
 test('Third person plural verbs', () => {
   assert.strictEqual(JSON.stringify(parser.analyze('cahuah')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"cahua","details":{"morpheme":"cahua","type":"verb_stem","english":"leave","past":"left","pp":"left"}},{"morpheme":"h","details":{"morpheme":"h","type":"suffix","category":"plural"}}],"englishTranslation":"they leave"}]}', 'no object prefix'); // find intransitive example
@@ -114,7 +112,6 @@ test('Compound words', () => {
   assert.strictEqual(JSON.stringify(parser.analyze('cuauhtemoc')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"cuauh","details":{"morpheme":"cuauh","type":"noun_stem","english":"eagle","countable":true,"animate":true}},{"morpheme":"temoc","details":{"morpheme":"temoc","type":"verb_stem","english":"descend"}}],"englishTranslation":"he/she/it descends like an eagle"}]}', 'noun_stem + verb_stem');
   assert.strictEqual(JSON.stringify(parser.analyze('noxochicihuatl')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"no","details":{"morpheme":"no","type":"prefix","role":"possessive","person":"first","number":"singular","english":"my","usedWith":"noun"}},{"morpheme":"xochi","details":{"morpheme":"xochi","type":"noun_stem","english":"flower","countable":true,"animate":false}},{"morpheme":"cihua","details":{"morpheme":"cihua","type":"noun_stem","english":"woman","englishPlural":"women","countable":true,"animate":true}},{"morpheme":"tl","details":{"morpheme":"tl","type":"suffix","category":"absolutive","nominalizing":true,"countable":true}}],"englishTranslation":"(it is) my flower-woman"}]}', 'prefix + noun + noun + suffix');
 });
-
 
 test('-lli participles', () => {
   assert.strictEqual(JSON.stringify(parser.analyze('pitzalli')), '{"success":true,"parsings":[{"morphemes":[{"morpheme":"pitza","details":{"morpheme":"pitza","type":"verb_stem","english":"blow","past":"blew","pp":"blown"}},{"morpheme":"lli","details":{"morpheme":"lli","type":"suffix","category":"participle","nominalizing":true,"countable":true}}],"englishTranslation":"(it is) blown"}]}', '-lli');
