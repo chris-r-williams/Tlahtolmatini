@@ -7,6 +7,24 @@ export class NahuatlTranslator {
   }
 
   /**
+   * Helper function to determine if a word starts with a vowel
+   * @param {string} word The word to check
+   * @returns {boolean} True if the word starts with a vowel
+   */
+  startsWithVowel(word) {
+    return /^[aeiouAEIOU]/.test(word.trim());
+  }
+
+  /**
+   * Helper function to get the appropriate article (a/an) for a word
+   * @param {string} nextWord The word that will follow the article
+   * @returns {string} Either "a" or "an"
+   */
+  getArticle(nextWord) {
+    return this.startsWithVowel(nextWord) ? 'an' : 'a';
+  }
+
+  /**
      * Generates English translations from an array of parsed Nahuatl morpheme sets.
      * @param {Array<Array<object>>} parsingsArray An array of parsings, each containing morphemes.
      * @returns {Array<string>} An array of English translations.
@@ -266,9 +284,8 @@ export class NahuatlTranslator {
           }
         }
 
-        // Determine article (a/an) for the noun
-        const startsWithVowel = /^[aeiou]/i.test(nounString);
-        const article = startsWithVowel ? 'an' : 'a';
+        // Use the helper function to determine the correct article
+        const article = this.getArticle(nounString);
 
         coreEnglishString += `${verbString} like ${article} ${nounString}`;
         requiresWrapper = false; // This is a complete verbal phrase, no wrapper needed
@@ -373,27 +390,33 @@ export class NahuatlTranslator {
           implicitPronoun = 'they';
         }
 
-        let addArticleA = false;
+        let shouldAddArticle = false;
 
-        // Determine if 'a' article is needed *before* overrides
+        // Determine if an article is needed *before* overrides
         // This is primarily for countable singular nouns without possessives
         if (primaryNounStemDetails && primaryNounStemDetails.countable && !hasPluralSuffix) {
-          addArticleA = true;
+          shouldAddArticle = true;
         } else if (isRightmostStemNominalizedVerb && otherNominalizingSuffixDetails && otherNominalizingSuffixDetails.countable && !hasPluralSuffix) {
-          addArticleA = true;
+          shouldAddArticle = true;
         }
 
-        // --- Universal overrides to prevent 'a' ---
-        // These conditions *override* the above 'addArticleA = true'
+        // --- Universal overrides to prevent article ---
+        // These conditions *override* the above 'shouldAddArticle = true'
         // if a possessive, object prefix ('tla', 'te'), or participle is present.
         if (isLliParticiple || tlaObjectPresent || teObjectPresent || possessivePrefixDetails) {
-          addArticleA = false;
+          shouldAddArticle = false;
         }
 
         // Only add wrapper if no main verb stem or if it's nominalized (including 'ni' agent noun)
         // Or if it's a possessive noun phrase
         if (!mainVerbStemDetails || isLliParticiple || isNominalizedByOtherSuffix || possessivePrefixDetails || isRightmostStemNominalizedVerb) {
-          finalTranslation = `(${implicitPronoun} ${copula}` + (addArticleA ? ' a' : '') + ') ' + coreEnglishString;
+          let articleString = '';
+          if (shouldAddArticle) {
+            // Get the correct article by checking the first word in coreEnglishString
+            const firstWord = coreEnglishString.trim().split(' ')[0];
+            articleString = ' ' + this.getArticle(firstWord);
+          }
+          finalTranslation = `(${implicitPronoun} ${copula}${articleString}) ${coreEnglishString}`;
         }
       } else if (mainVerbStemDetails) {
         // For pure verbs without explicit subject, add implicit third person subject
@@ -434,23 +457,29 @@ export class NahuatlTranslator {
           copulaVerb = 'is';
         }
 
-        let addArticleA = false;
+        let shouldAddArticle = false;
         if (primaryNounStemDetails && primaryNounStemDetails.countable && !hasPluralSuffix && !hasNounStemBeforeVerb) {
-          addArticleA = true;
+          shouldAddArticle = true;
         } else if (isNominalizedByOtherSuffix && otherNominalizingSuffixDetails && otherNominalizingSuffixDetails.countable && !hasPluralSuffix) {
-          addArticleA = true;
+          shouldAddArticle = true;
         }
 
         // Override if object prefix or possessive
         if (tlaObjectPresent || teObjectPresent || possessivePrefixDetails) {
-          addArticleA = false;
+          shouldAddArticle = false;
         }
 
         // Don't add copula for noun-verb compounds since they're already complete verbal phrases
         if (hasNounStemBeforeVerb) {
           finalTranslation = `${subjectString} ${verbOrNounString}`;
         } else {
-          finalTranslation = `${subjectString} ${copulaVerb}` + (addArticleA ? ' a' : '') + ` ${verbOrNounString}`;
+          let articleString = '';
+          if (shouldAddArticle) {
+            // Get the correct article by checking the first word in verbOrNounString
+            const firstWord = verbOrNounString.trim().split(' ')[0];
+            articleString = ' ' + this.getArticle(firstWord);
+          }
+          finalTranslation = `${subjectString} ${copulaVerb}${articleString} ${verbOrNounString}`;
         }
       } else {
         finalTranslation = `${subjectString} ${verbOrNounString}`;
