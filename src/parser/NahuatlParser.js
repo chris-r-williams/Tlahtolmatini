@@ -1,7 +1,7 @@
 import { sortByMorphemeLengthDesc, modernToClassical, classicalToModern } from '../helper.js';
 import { nahuatlLexicon } from '../lexicon.js';
 import { knownAmbiguousWords } from '../ambiguous.js';
-import { NahuatlTranslator } from '../translator.js';
+import { NahuatlTranslator } from '../translator/NahuatlTranslator.js';
 import { MorphemeValidator } from './MorphemeValidator.js';
 import { BacktrackingParser } from './BacktrackingParser.js';
 

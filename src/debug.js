@@ -1,4 +1,4 @@
-import { NahuatlParser } from './parser/index.js';
+import { NahuatlParser } from './parser/NahuatlParser.js';
 
 function debug() {
   // grammar
