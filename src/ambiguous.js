@@ -28,4 +28,16 @@ export const knownAmbiguousWords = [
       ],
     ],
   },
+  {
+    word: 'nahui',
+    parse: [
+      [
+        { morpheme: 'n', details: nahuatlLexicon.find((m) => m.morpheme === 'n' && m.type === 'prefix') },
+        { morpheme: 'ahui', details: nahuatlLexicon.find((m) => m.morpheme === 'ahui' && m.type === 'noun_stem') },
+      ],
+      [
+        { morpheme: 'nahui', details: nahuatlLexicon.find((m) => m.morpheme === 'nahui' && m.type === 'numeral') },
+      ],
+    ],
+  },
 ];

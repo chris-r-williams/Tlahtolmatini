@@ -92,7 +92,8 @@ export class NahuatlParser {
             m.type === 'interrogative' ||
             m.type === 'adverb' ||
             m.type === 'adjective' ||
-            m.type === 'interjection',
+            m.type === 'interjection' ||
+            m.type === 'numeral',
     );
     const match = invariables.find((m) => m.morpheme === word);
     if (match) {
