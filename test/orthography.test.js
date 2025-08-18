@@ -33,6 +33,10 @@ test('Modern to classical orthography conversion', () => {
   assert.strictEqual(modernToClassical('listli'), 'liztli', 'liztli');
   assert.strictEqual(modernToClassical('tsintli'), 'tzintli', 'tzintli');
   assert.strictEqual(modernToClassical('tlakwa'), 'tlacua', 'tlacua');
+  assert.strictEqual(modernToClassical('nekwtli'), 'necuhtli', 'necuhtli');
+  assert.strictEqual(modernToClassical('nikkaki'), 'niccaqui', 'niccaqui');
+  assert.strictEqual(modernToClassical('nikkowa'), 'niccohua', 'niccohua');
+  assert.strictEqual(modernToClassical('miston'), 'mizton', 'mizton');
 });
 
 test('Classical to modern orthography conversion', () => {
@@ -65,4 +69,8 @@ test('Classical to modern orthography conversion', () => {
   assert.strictEqual(classicalToModern('liztli'), 'listli', 'listli');
   assert.strictEqual(classicalToModern('tzintli'), 'tsintli', 'tsintli');
   assert.strictEqual(classicalToModern('tlacua'), 'tlakwa', 'tlakwa');
+  assert.strictEqual(classicalToModern('necuhtli'), 'nekwtli', 'nekwtli');
+  assert.strictEqual(classicalToModern('niccaqui'), 'nikkaki', 'nikkaki');
+  assert.strictEqual(classicalToModern('niccohua'), 'nikkowa', 'nikkowa');
+  assert.strictEqual(classicalToModern('mizton'), 'miston', 'miston');
 });
