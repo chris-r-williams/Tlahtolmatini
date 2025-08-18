@@ -2,6 +2,30 @@ import { nahuatlLexicon } from './lexicon.js';
 
 // --- Known Ambiguous Words ---
 export const knownAmbiguousWords = [
+  // For now, atl is going in ambiguous words, because when I put "a" as a noun
+  // stem into the lexicon, there are a ton of "a"s that are potential matches
+  // and it results in some strange parsings. In order for it to work correctly
+  // as a lexicon entry, the parser algortihm will need to be locked down tight
+  // which it currently isn't.
+  {
+    word: 'atl',
+    parse: [
+      [
+        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false }},
+        { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'altepetl',
+    parse: [
+      [
+        { morpheme: 'al', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false }},
+        { morpheme: 'tepe', details: nahuatlLexicon.find((m) => m.morpheme === 'tepe' && m.type === 'noun_stem') },
+        { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
+      ],
+    ],
+  },
   {
     // This word is on page 11 of the second edition of Garcia's Learn Nahuatl.
     // He says it means "my lord," so teco is presumably from tekohtli

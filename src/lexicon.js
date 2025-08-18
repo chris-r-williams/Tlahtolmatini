@@ -232,7 +232,7 @@ export const nahuatlLexicon = [
   { morpheme: 'pah', type: 'noun_stem', english: 'medicine', countable: false, animate: false },
   { morpheme: 'pahuax', type: 'noun_stem', english: 'cooked', countable: true, animate: false },
   { morpheme: 'pami', type: 'noun_stem', english: 'banner', countable: true, animate: false },
-  { morpheme: 'pantalon', type: 'noun_stem', english: 'pants', countable: false, animate: false },
+  { morpheme: 'pantalon', type: 'noun_stem', english: 'pants', countable: false, animate: false, absolutiveSuffix: false },
   { morpheme: 'papalo', type: 'noun_stem', english: 'butterfly', countable: true, animate: true, absolutiveSuffix: false },
   { morpheme: 'patox', type: 'noun_stem', english: 'duck', countable: true, animate: true, absolutiveSuffix: false },
   { morpheme: 'pil', type: 'noun_stem', english: 'noble', countable: true, animate: true },
