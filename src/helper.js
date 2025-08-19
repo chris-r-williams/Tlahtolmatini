@@ -44,6 +44,7 @@ export function modernToClassical(word) {
     	(classical = classical.replaceAll('aso', 'azo')),
     (classical = classical.replaceAll('ts', 'tz')),
     	(classical = classical.replaceAll('sa', 'za')),
+      (classical = classical.replaceAll('sk', 'zc')),
     (classical = classical.replaceAll('se', 'ce')),
     (classical = classical.replaceAll('si', 'ci')),
     (classical = classical.replaceAll('st', 'zt')),
