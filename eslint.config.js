@@ -5,7 +5,7 @@ const INDENT_LEVEL = 2;
 
 export default [
   {
-    ignores: ['dist/**', 'webpack.config.js'],
+    ignores: ['dist/**'],
   },
   {
     files: ['**/*.{js,mjs,cjs}'],
