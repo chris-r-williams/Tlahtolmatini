@@ -20,7 +20,9 @@ export class MorphemeAnalyzer {
       isImperfectVerb: false,
       isLliParticiple: false,
       isNominalizedByOtherSuffix: false,
+      isTicAdjective: false, // NEW: Handle -tic suffix
       otherNominalizingSuffixDetails: null,
+      ticSuffixDetails: null, // NEW: Store -tic suffix details
       isRightmostStemNominalizedVerb: false,
       tlaObjectPresent: false,
       teObjectPresent: false,
@@ -72,6 +74,13 @@ export class MorphemeAnalyzer {
   _analyzeSuffix(morpheme, details, analysis) {
     if (details.category === 'imperfect') {
       analysis.isImperfectVerb = true;
+    }
+
+    // Handle -tic suffix
+    if (morpheme === 'tic' && details.type === 'suffix') {
+      analysis.isTicAdjective = true;
+      analysis.ticSuffixDetails = details;
+      return; // Don't process as nominalizing suffix
     }
 
     if (details.nominalizing) {

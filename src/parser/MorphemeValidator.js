@@ -36,9 +36,61 @@ export class MorphemeValidator {
       if (!this.#validateContextRules(p, prefixes, stems, suffixes, primaryStem)) {
         return false;
       }
+      if (!this.#validateLliSuffixRules(primaryStem, suffixes)) {
+        return false;
+      }
+      if (!this.#validateYohSuffixRules(primaryStem, suffixes)) {
+        return false;
+      }
+      if (!this.#validateNounStemAbsolutiveRules(primaryStem, prefixes, suffixes)) {
+        return false;
+      }
 
       return true;
     });
+  }
+
+  /**
+   * Validates that -lli suffix is only used with verb stems
+   * @param {Object} primaryStem - The primary (rightmost) stem
+   * @param {Array} suffixes - Array of suffix morphemes
+   * @returns {boolean} Whether -lli usage is valid
+   */
+  #validateLliSuffixRules(primaryStem, suffixes) {
+    const lliSuffix = suffixes.find((s) => s.details.morpheme === 'lli');
+
+    if (lliSuffix) {
+      // -lli suffix found, check if primary stem is a verb stem
+      if (!primaryStem || primaryStem.details.type !== 'verb_stem') {
+        return false; // -lli can only be used with verb stems
+      }
+
+      // Additional check: -lli should be nominalizing
+      if (!lliSuffix.details.nominalizing) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Validates that -yoh suffix is only used with noun stems
+   * @param {Object} primaryStem - The primary (rightmost) stem
+   * @param {Array} suffixes - Array of suffix morphemes
+   * @returns {boolean} Whether -yoh usage is valid
+   */
+  #validateYohSuffixRules(primaryStem, suffixes) {
+    const yohSuffix = suffixes.find((s) => s.details.morpheme === 'yoh');
+
+    if (yohSuffix) {
+      // -yoh suffix found, check if primary stem is a noun stem
+      if (!primaryStem || primaryStem.details.type !== 'noun_stem') {
+        return false; // -yoh can only be used with noun stems
+      }
+    }
+
+    return true;
   }
 
   /**
@@ -95,6 +147,40 @@ export class MorphemeValidator {
         return false;
       }
     }
+    return true;
+  }
+
+  /**
+   * Validates that noun stems require absolutive suffixes unless explicitly marked otherwise
+   * @param {Object} primaryStem - The primary (rightmost) stem
+   * @param {Array} prefixes - Array of prefix morphemes
+   * @param {Array} suffixes - Array of suffix morphemes
+   * @returns {boolean} Whether noun stem suffix requirements are met
+   */
+  #validateNounStemAbsolutiveRules(primaryStem, prefixes, suffixes) {
+    if (primaryStem?.details.type === 'noun_stem') {
+      const hasPossessivePrefix = prefixes.some((p) => p.details.role === 'possessive');
+      const hasAbsolutiveSuffix = suffixes.some((s) =>
+        s.details.category === 'absolutive' ||
+        ['li', 'tli', 'tl', 'tzintli', 'h'].includes(s.details.morpheme),
+      );
+      const hasOtherSuffixes = suffixes.some((s) =>
+        s.details.category !== 'absolutive' &&
+        !['li', 'tli', 'tl', 'tzintli', 'h'].includes(s.details.morpheme),
+      );
+
+      // If the noun stem doesn't explicitly allow bare usage (absolutiveSuffix !== false)
+      // then it must have either:
+      // 1. An absolutive suffix, OR
+      // 2. A possessive prefix (possessed nouns don't need absolutive), OR
+      // 3. Other suffixes that replace the absolutive requirement
+      if (primaryStem.details.absolutiveSuffix !== false) {
+        if (!hasAbsolutiveSuffix && !hasPossessivePrefix && !hasOtherSuffixes) {
+          return false; // Noun stem requires some kind of suffix or possessive marking
+        }
+      }
+    }
+
     return true;
   }
 

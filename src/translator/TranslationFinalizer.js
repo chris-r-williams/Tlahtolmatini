@@ -35,7 +35,7 @@ export class TranslationFinalizer {
 
       if (!analysis.mainVerbStemDetails || analysis.isLliParticiple ||
           analysis.isNominalizedByOtherSuffix || analysis.possessivePrefixDetails ||
-          analysis.isRightmostStemNominalizedVerb) {
+          analysis.isRightmostStemNominalizedVerb || analysis.isTicAdjective) {
 
         let articleString = '';
         if (shouldAddArticle) {
@@ -59,13 +59,15 @@ export class TranslationFinalizer {
     const subjectString = analysis.subjectPrefixDetails.english;
     const hasNounStemBeforeVerb = analysis.allNounStemsDetails.length > 0 && analysis.mainVerbStemDetails;
 
-    if (analysis.mainVerbStemDetails && !analysis.isLliParticiple && !analysis.isNominalizedByOtherSuffix) {
+    if (analysis.mainVerbStemDetails && !analysis.isLliParticiple &&
+        !analysis.isNominalizedByOtherSuffix && !analysis.isTicAdjective) {
       return `${subjectString} ${coreEnglishString}`;
-    } else if (analysis.allNounStemsDetails.length > 0 || analysis.isLliParticiple || analysis.isNominalizedByOtherSuffix) {
+    } else if (analysis.allNounStemsDetails.length > 0 || analysis.isLliParticiple ||
+               analysis.isNominalizedByOtherSuffix || analysis.isTicAdjective) {
       const copulaVerb = this._getCopulaVerb(analysis.subjectPrefixDetails);
       const shouldAddArticle = this._shouldAddArticle(analysis, hasNounStemBeforeVerb);
 
-      if (hasNounStemBeforeVerb) {
+      if (hasNounStemBeforeVerb && !analysis.isTicAdjective) { // -tic adjectives need copula even with verb stems
         return `${subjectString} ${coreEnglishString}`;
       } else {
         let articleString = '';
@@ -98,6 +100,11 @@ export class TranslationFinalizer {
 
     // Override for participles
     if (analysis.isLliParticiple) {
+      shouldAddArticle = false;
+    }
+
+    // No article needed for -tic adjectives (they're already descriptive)
+    if (analysis.isTicAdjective) {
       shouldAddArticle = false;
     }
 

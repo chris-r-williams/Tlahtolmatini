@@ -23,8 +23,12 @@ export class CoreStringBuilder {
       requiresWrapper = false;
     }
 
-    // Build core string based on morpheme types
-    if (analysis.isLliParticiple) {
+    // Handle -tic adjective suffix first
+    if (analysis.isTicAdjective) {
+      const result = this._buildTicAdjective(analysis);
+      coreEnglishString += result.string;
+      requiresWrapper = result.requiresWrapper;
+    } else if (analysis.isLliParticiple) {
       const result = this._buildLliParticiple(analysis);
       coreEnglishString += result.string;
       requiresWrapper = result.requiresWrapper;
@@ -56,13 +60,13 @@ export class CoreStringBuilder {
       }
     }
 
-    // Handle object prefixes
-    if (analysis.objectPrefixDetails) {
+    // Handle object prefixes (skip for -tic adjectives)
+    if (analysis.objectPrefixDetails && !analysis.isTicAdjective) {
       coreEnglishString += ' ' + analysis.objectPrefixDetails.english;
     }
 
     // Handle possessive prefix (if not already handled)
-    if (analysis.possessivePrefixDetails) {
+    if (analysis.possessivePrefixDetails && !analysis.isTicAdjective) {
       if (coreEnglishString) {
         coreEnglishString = analysis.possessivePrefixDetails.english + ' ' + coreEnglishString;
       } else {
@@ -71,12 +75,43 @@ export class CoreStringBuilder {
       requiresWrapper = true;
     }
 
-    // Handle reflexive prefixes
-    if (analysis.reflexivePrefixDetails) {
+    // Handle reflexive prefixes (skip for -tic adjectives)
+    if (analysis.reflexivePrefixDetails && !analysis.isTicAdjective) {
       coreEnglishString += ' ' + analysis.reflexivePrefixDetails.english;
     }
 
     return { coreEnglishString, requiresWrapper };
+  }
+
+  // Method to build -tic adjectives
+  _buildTicAdjective(analysis) {
+    let string = '';
+
+    if (analysis.allNounStemsDetails.length > 0) {
+      // Use the noun stem(s) with -like suffix
+      const nounParts = analysis.allNounStemsDetails.map((details) => details.english);
+      string = nounParts.join('-') + '-like';
+    } else if (analysis.mainVerbStemDetails) {
+      // If somehow there's a verb stem, use it with -like
+      string = analysis.mainVerbStemDetails.english + '-like';
+    } else {
+      // Fallback to any available morpheme
+      const availableMorphemes = analysis.parsedMorphemes.filter((m) =>
+        m.morpheme !== 'tic' && m.details.english,
+      );
+      if (availableMorphemes.length > 0) {
+        string = availableMorphemes.map((m) => m.details.english).join('-') + '-like';
+      } else {
+        string = 'like';
+      }
+    }
+
+    // Handle possessive prefix for -tic adjectives
+    if (analysis.possessivePrefixDetails) {
+      string = analysis.possessivePrefixDetails.english + ' ' + string;
+    }
+
+    return { string, requiresWrapper: true };
   }
 
   _buildLliParticiple(analysis) {
