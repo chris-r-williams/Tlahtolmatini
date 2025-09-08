@@ -24,7 +24,8 @@ function debug() {
   //const words = ["cua", "tlacua", "nicua", "nitlacua"];
   //const words = ['atl', 'etl', 'ichcatl', 'ohtli', 'pamitl', 'tocatl', 'cacaoh', 'lemeni', 'tomin', 'nesi', 'ehecatl', 'hueyi', 'yayahuic', 'ce', 'chahuiztli', 'xoxoctic', 'tzapotl', 'tlalli', 'cuahuitl', 'yollo', 'noteco', 'tonatiuh', 'nocniuh', 'necuhtli', 'nicnequi', 'niccaqui', 'canin', 'mocauhqui', 'quitzacqui', 'tlacualli', 'tecciztli', 'chichi', 'notlacauh', 'nocihuauh', 'tototl', 'quetzalcoatl', 'cocolia', 'mococoa', 'coatl', 'niccohua', 'nimotlaloa', 'tetiya', 'nictequihuia', 'chichi', 'tlatia', 'toca', 'amo', 'quena', 'nanan', 'tetic', 'noyollo', 'nonantzin', 'tlayi', 'ahui', 'cihuatl', 'cuahuitl', 'tzahtzi', 'ahhua', 'nechuitzin', 'mochiuhtoc', 'tlazcamati', 'tlazohcamati']; // modern vocabulary, set 1
   //const words = ['coyotl', 'amatl', 'camohtli', 'pahtli', 'calli', 'tamalli', 'citlalin', 'michin', 'mizton', 'cahuayoh', 'patox', 'nomichin', 'michimeh', 'tlalli', 'nemilistli', 'cihuapil', 'cuapuertah', 'tepostli', 'tlaltipactli', 'tlatsotsontli', 'macehualli', 'coyomeh', 'miztonmeh', 'macehualmeh', 'chichimeh', 'ocuilimeh', 'pantalon', 'tepetl', 'oquichpil', 'ocuilin', 'altepetl', 'pitzotl', 'amoxtli', 'tepetl', 'ce', 'ome', 'eyi', 'nahui', 'macuilli', 'chicuace', 'chicome', 'chicueyi', 'chicnahui', 'mahtlactli', 'nitlacatl', 'titlacatl', 'titlacameh', 'intlacameh', 'tlacameh', 'maxochitl', 'telpocatl', 'ichpocatl', 'momachtianih', 'momachtihquetl', 'papalotl', 'ayotl', 'inin', 'inon', 'zayolin', 'cuecuetztzin', 'namantzin', 'piyo', 'huacax', 'toroh', 'cuatochin']; // modern vocabulary, set 2
-  const words = ['ahui'];
+  //const words = ['tecactli', 'notecac', 'nochichi', 'nochichihuan', 'noyollo', 'motlayi', 'motlayihuan', 'noicnihuan', 'iicnihuan', 'toicniuh', 'inmoicniuh', 'ininicniuh', 'ininicnihuan', 'mocahuayoh', 'ininpitzo', 'motamal', 'nocoton', 'noeuh', 'noauh', 'icnitl', 'noicniuh', 'noahuacauh', 'notocah', 'motocah', 'itocah', 'queniuhqui', 'ichichi', 'inantzin', 'itlayi', 'ichan', 'notlalhui', 'nopahui', 'yeyohtli', 'noyeyohwi', 'cotomitl', 'nocoton', 'tocaitl', 'cueitl', 'nocue', 'cualtitoc', 'nimitztlahpaloz', 'tatah', 'notzontecon', 'noixtiyol', 'nonacaz', 'notzoncal', 'noyacatzol', 'noixxayac']; // modern vocabulary, set 3
+  const words = ['tlayi'];
   const numWords = words.length;
   let successful = 0;
 
@@ -66,7 +67,7 @@ function analyze(input) {
     if (!onlyTests) {
     	console.log('Generated test:');
     }
-    console.log(`assert.strictEqual(JSON.stringify(parser.analyze("${word}")), \`${JSON.stringify(result)}\`, "${word}");`);
+    console.log(`assert.strictEqual(JSON.stringify(parser.analyze('${word}')), '${JSON.stringify(result)}', '${word}');`);
     result.parsings.forEach((parsing) => {
 
       if (!onlyTests) {
@@ -81,7 +82,7 @@ function analyze(input) {
       console.log('Parse failed:', result.error);
       console.log('Generated placeholder test:');
     }
-    console.log(`//assert.strictEqual(JSON.stringify(parser.analyze("${word}")), \`\`, "${word}");`);
+    console.log(`//assert.strictEqual(JSON.stringify(parser.analyze('${word}')), '', '${word}');`);
   }
 
   return result.success;

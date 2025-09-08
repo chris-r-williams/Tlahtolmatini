@@ -17,6 +17,16 @@ export const knownAmbiguousWords = [
     ],
   },
   {
+    word: 'noauh',
+    parse: [
+      [
+        { morpheme: 'no', details: nahuatlLexicon.find((m) => m.morpheme === 'no' && m.type === 'prefix') },
+        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false }},
+        { morpheme: 'uh', details: nahuatlLexicon.find((m) => m.morpheme === 'uh' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
     word: 'altepetl',
     parse: [
       [
