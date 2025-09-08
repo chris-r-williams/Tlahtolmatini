@@ -1,6 +1,6 @@
 {
   "name": "tlahtolmatini",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A morphological analyzer for Nahuatl words",
   "main": "index.js",
   "scripts": {
