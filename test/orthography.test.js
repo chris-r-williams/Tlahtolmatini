@@ -38,6 +38,7 @@ test('Modern to classical orthography conversion', () => {
   assert.strictEqual(modernToClassical('nikkowa'), 'niccohua', 'niccohua');
   assert.strictEqual(modernToClassical('miston'), 'mizton', 'mizton');
   assert.strictEqual(modernToClassical('tlaskamati'), 'tlazcamati', 'tlazcamati');
+  assert.strictEqual(modernToClassical('nimitstlahpalos'), 'nimitztlahpaloz', 'nimitztlahpaloz');
 });
 
 test('Classical to modern orthography conversion', () => {
@@ -75,5 +76,5 @@ test('Classical to modern orthography conversion', () => {
   assert.strictEqual(classicalToModern('niccohua'), 'nikkowa', 'nikkowa');
   assert.strictEqual(classicalToModern('mizton'), 'miston', 'miston');
   assert.strictEqual(classicalToModern('tlazcamati'), 'tlaskamati', 'tlaskamati');
-
+  assert.strictEqual(classicalToModern('nimitztlahpaloz'), 'nimitstlahpalos', 'nimitstlahpalos');
 });

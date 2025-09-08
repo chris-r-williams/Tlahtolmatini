@@ -59,6 +59,7 @@ export function modernToClassical(word) {
     (classical = classical.replaceAll('aw', 'auh')),
     (classical = classical.replaceAll('ew', 'euh')),
     (classical = classical.replaceAll('iw', 'iuh')),
+    (classical = classical.replaceAll('s', 'z')),
     classical
   );
 };
