@@ -1,4 +1,4 @@
-import { sortByMorphemeLengthDesc, modernToClassical, classicalToModern } from '../helper.js';
+import { sortByMorphemeLengthDesc, modernToClassical, classicalToModern, normalizeInput } from '../helper.js';
 import { nahuatlLexicon } from '../lexicon.js';
 import { knownAmbiguousWords } from '../ambiguous.js';
 import { NahuatlTranslator } from '../translator/NahuatlTranslator.js';
@@ -31,7 +31,7 @@ export class NahuatlParser {
      * @returns {Object} Analysis result containing success status and morpheme parsings
      */
   analyze(word, orthography = 'classical') {
-    let processedWord = word.toLowerCase();
+    let processedWord = normalizeInput(word);
 
     // Convert to classical orthography if input is modern
     if (orthography === 'modern') {

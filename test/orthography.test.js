@@ -78,3 +78,9 @@ test('Classical to modern orthography conversion', () => {
   assert.strictEqual(classicalToModern('tlazcamati'), 'tlaskamati', 'tlaskamati');
   assert.strictEqual(classicalToModern('nimitztlahpaloz'), 'nimitstlahpalos', 'nimitstlahpalos');
 });
+
+test('Launey to modern orthography conversion', () => {
+  assert.strictEqual(classicalToModern('teuctli'), 'tekwtli', 'tekwtli');
+  assert.strictEqual(classicalToModern('èecatl'), 'ehekatl', 'ehekatl');
+  assert.strictEqual(classicalToModern('tlacuâ'), 'tlakwah', 'tlakwah');
+});

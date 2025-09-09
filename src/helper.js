@@ -23,15 +23,48 @@ export const pluralSuffixMorphemes = new Set(
   nahuatlLexicon.filter((m) => m.type === 'suffix' && (m.category === 'plural' || m.category === 'plural_marker')).map((m) => m.morpheme),
 );
 
+export function normalizeInput(word) {
+  // Normalize input word to lowercase and remove diacritics
+  // First de-Launey-ify any accented vowels to their base vowel + 'h'
+  const vowelMap = {
+    // Grave accents
+    'à': 'ah',
+    'è': 'eh',
+    'ì': 'ih',
+    'ò': 'oh',
+    'ù': 'uh',
+
+    // Circumflex accents
+    'â': 'ah',
+    'ê': 'eh',
+    'î': 'ih',
+    'ô': 'oh',
+    'û': 'uh',
+  };
+
+  // Replace each accented vowel using the map
+  let normalized = word.toLowerCase().replace(/[àèìòùâêîôû]/g, function (match) {
+    return vowelMap[match] || match;
+  });
+
+  // Also de-Launey-ify by replacing 'uc' with 'cuh' before consonants or at the end of the word
+  normalized = normalized.replace(/uc(?=[b-df-hj-np-tv-z]|$)/g, 'cuh');
+
+  // Finally, remove any remaining diacritical marks
+  normalized = normalized.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  return normalized;
+}
+
 /**
  * Converts a Nahuatl word from modern orthography to classical orthography
  * @param {string} word - Word in modern Nahuatl orthography
  * @returns {string} Word converted to classical orthography
  */
 export function modernToClassical(word) {
-  // Remove macrons and any other diacritical marks
-  let classical = word.toLowerCase().normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+  // Normalize
+  let classical = normalizeInput(word);
   return (
     	(classical = classical.replaceAll('iwkin', 'yuhquin')),
     (classical = classical.replaceAll('kis', 'quiz')),
@@ -70,9 +103,8 @@ export function modernToClassical(word) {
  * @returns {string} Morpheme converted to modern orthography
  */
 export function classicalToModern(morpheme) {
-  // remove macrons and any other diacritical marks
-  let modern = morpheme.toLowerCase().normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+  // Normalize
+  let modern = normalizeInput(morpheme);
   return (
     (modern = modern.replaceAll('z', 's')),
     (modern = modern.replaceAll('yuh', 'iw')),
