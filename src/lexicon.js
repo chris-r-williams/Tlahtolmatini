@@ -9,6 +9,7 @@ export const nahuatlLexicon = [
   { morpheme: 'ce', type: 'particle', english: 'a, one' },
   { morpheme: 'cenca', type: 'particle', english: 'very' },
   { morpheme: 'huan', type: 'particle', english: 'and' },
+  { morpheme: 'in', type: 'particle', english: 'the (definite article)' },
   { morpheme: 'inin', type: 'particle', english: 'this' },
   { morpheme: 'inon', type: 'particle', english: 'that' },
   { morpheme: 'itztoc', type: 'particle', english: "it's here" },
@@ -144,6 +145,7 @@ export const nahuatlLexicon = [
   { morpheme: 'maltia', type: 'verb_stem', english: 'bathe'},
   { morpheme: 'mati', type: 'verb_stem', english: 'know', past: 'knew', pp: 'known' },
   { morpheme: 'mihtotia', type: 'verb_stem', english: 'dance'},
+  { morpheme: 'miqui', type: 'verb_stem', english: 'die' },
   { morpheme: 'motlaloa', type: 'verb_stem', english: 'run', past: 'ran', pp: 'run' },
   { morpheme: 'namaca', type: 'verb_stem', english: 'sell', past: 'sold', pp: 'sold' },
   { morpheme: 'nemi', type: 'verb_stem', english: 'live'},
@@ -175,6 +177,7 @@ export const nahuatlLexicon = [
   { morpheme: 'tzicui', type: 'verb_stem', english: 'take', past: 'took', pp: 'taken' },
   { morpheme: 'xochiya', type: 'verb_stem', english: 'bloom'},
   { morpheme: 'yauh', type: 'verb_stem', english: 'go', past: 'went', pp: 'gone', thirdSing: 'goes' },
+  { morpheme: 'yoli', type: 'verb_stem', english: 'live'},
   { morpheme: 'za', type: 'verb_stem', english: 'say', past: 'said', pp: 'said' },
 
   // Noun Stems
@@ -226,6 +229,7 @@ export const nahuatlLexicon = [
   { morpheme: 'maxochi', type: 'noun_stem', english: 'gay man', englishPlural: 'gay men', countable: true, animate: true },
   { morpheme: 'me', type: 'noun_stem', english: 'mageuy', countable: true, animate: false },
   { morpheme: 'meca', type: 'noun_stem', english: 'rope', countable: true, animate: false },
+  { morpheme: 'mexihca', type: 'noun_stem', english: 'Mexica person', englishPlural: 'Mexica people', countable: true, animate: true },
   { morpheme: 'michi', type: 'noun_stem', english: 'fish', countable: true, animate: true },
   { morpheme: 'michin', type: 'noun_stem', english: 'fish', countable: true, animate: true, absolutiveSuffix: false },
   { morpheme: 'mizton', type: 'noun_stem', english: 'cat', countable: true, animate: true, absolutiveSuffix: false },
