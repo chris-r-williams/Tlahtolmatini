@@ -1,5 +1,11 @@
 import { nahuatlLexicon } from './lexicon/index.js';
 
+// Single-character stems that cause issues in parsing
+// (not everything is water or beans, but when every A or E is potentially water or beans, well...)
+const a = { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false };
+const e = { morpheme: 'e', type: 'noun_stem', english: 'bean', countable: true, animate: false };
+const i = { morpheme: 'i', type: 'verb_stem', english: 'drink', past: 'drank', pp: 'drunk' };
+
 // --- Known Ambiguous Words ---
 export const knownAmbiguousWords = [
   // For now, atl is going in ambiguous words, because when I put "a" as a noun
@@ -11,7 +17,7 @@ export const knownAmbiguousWords = [
     word: 'atl',
     parse: [
       [
-        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false } },
+        { morpheme: 'a', details: a},
         { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
       ],
     ],
@@ -21,7 +27,7 @@ export const knownAmbiguousWords = [
     parse: [
       [
         { morpheme: 'no', details: nahuatlLexicon.find((m) => m.morpheme === 'no' && m.type === 'prefix') },
-        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false } },
+        { morpheme: 'a', details: a },
         { morpheme: 'uh', details: nahuatlLexicon.find((m) => m.morpheme === 'uh' && m.type === 'suffix') },
       ],
     ],
@@ -30,9 +36,91 @@ export const knownAmbiguousWords = [
     word: 'altepetl',
     parse: [
       [
-        { morpheme: 'al', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false } },
+        { morpheme: 'al', details: a },
         { morpheme: 'tepe', details: nahuatlLexicon.find((m) => m.morpheme === 'tepe' && m.type === 'noun_stem') },
         { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'etl',
+    parse: [
+      [
+        { morpheme: 'e', details: e },
+        { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'mepahuax',
+    parse: [
+      [
+        { morpheme: 'm', details: nahuatlLexicon.find((m) => m.morpheme === 'm' && m.type === 'prefix' && m.role === 'possessive') },
+        { morpheme: 'e', details: e },
+        { morpheme: 'pahuax', details: nahuatlLexicon.find((m) => m.morpheme === 'pahuax' && m.type === 'noun_stem')},
+      ],
+    ],
+  },
+  {
+    word: 'nenamacac',
+    parse: [
+      [
+        { morpheme: 'n', details: nahuatlLexicon.find((m) => m.morpheme === 'n' && m.type === 'prefix' && m.role === 'subject')},
+        { morpheme: 'e', 'details': e},
+        { morpheme: 'namacac', details: nahuatlLexicon.find((m) => m.morpheme === 'namacac' && m.type === 'noun_stem')},
+      ],
+      [
+        { morpheme: 'n', details: nahuatlLexicon.find((m) => m.morpheme === 'n' && m.type === 'prefix' && m.role === 'possessive')},
+        { morpheme: 'e', 'details': e},
+        { morpheme: 'namacac', details: nahuatlLexicon.find((m) => m.morpheme === 'namacac' && m.type === 'noun_stem')},
+      ],
+    ],
+  },
+  {
+    word: 'tetl',
+    parse: [
+      [
+        { morpheme: 'te', details: nahuatlLexicon.find((m) => m.morpheme === 'te' && m.type === 'noun_stem') },
+        { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
+      ],
+      [
+        { morpheme: 't', details: nahuatlLexicon.find((m) => m.morpheme === 't' && m.type === 'prefix' && m.role === 'subject' && m.person === 'second') },
+        { morpheme: 'e', details: e },
+        { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
+      ],
+      [
+        { morpheme: 't', details: nahuatlLexicon.find((m) => m.morpheme === 't' && m.type === 'prefix' && m.role === 'possessive') },
+        { morpheme: 'e', details: e },
+        { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'noeuh',
+    parse: [
+      [
+        { morpheme: 'no', details: nahuatlLexicon.find((m) => m.morpheme === 'no' && m.type === 'prefix') },
+        { morpheme: 'e', details: e },
+        { morpheme: 'uh', details: nahuatlLexicon.find((m) => m.morpheme === 'uh' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'qui',
+    parse: [
+      [
+        { morpheme: 'qu', details: nahuatlLexicon.find((m) => m.morpheme === 'qu' && m.type === 'prefix') },
+        { morpheme: 'i', details: i },
+      ],
+    ],
+  },
+  {
+    word: 'quih',
+    parse: [
+      [
+        { morpheme: 'qu', details: nahuatlLexicon.find((m) => m.morpheme === 'qu' && m.type === 'prefix') },
+        { morpheme: 'i', details: i },
+        { morpheme: 'h', details: nahuatlLexicon.find((m) => m.morpheme === 'h' && m.type === 'suffix') },
       ],
     ],
   },

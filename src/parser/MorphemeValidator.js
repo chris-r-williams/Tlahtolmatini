@@ -111,12 +111,15 @@ export class MorphemeValidator {
       }
     }
 
-    // If primary stem is a noun stem, it cannot take object prefixes
+    // If primary stem is a noun stem, it cannot take object prefixes or tense suffixes
     if (primaryStem.details.type === 'noun_stem') {
       const hasObjectPrefixes = prefixes.some((s) =>
         s.details.role === 'object',
       );
-      if (hasObjectPrefixes) {
+      const hasTenseSuffixes = suffixes.some((s) =>
+        s.details.category === 'future' || s.details.category === 'past',
+      );
+      if (hasObjectPrefixes || hasTenseSuffixes) {
         return false;
       }
     }
