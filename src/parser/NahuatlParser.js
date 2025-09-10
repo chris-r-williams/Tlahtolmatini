@@ -1,5 +1,5 @@
 import { sortByMorphemeLengthDesc, modernToClassical, classicalToModern, normalizeInput } from '../helper.js';
-import { nahuatlLexicon } from '../lexicon.js';
+import { nahuatlLexicon } from '../lexicon/index.js';
 import { knownAmbiguousWords } from '../ambiguous.js';
 import { NahuatlTranslator } from '../translator/NahuatlTranslator.js';
 import { MorphemeValidator } from './MorphemeValidator.js';
@@ -18,6 +18,7 @@ export class NahuatlParser {
      * Creates a new instance of NahuatlParser and initializes components
      */
   constructor() {
+    // Sort by morpheme length (descending) to prioritize longer matches first
     this.#lexicon = sortByMorphemeLengthDesc(nahuatlLexicon);
     this.#ambiguousWords = knownAmbiguousWords;
     this.#backtrackingParser = new BacktrackingParser(this.#lexicon);
@@ -89,11 +90,11 @@ export class NahuatlParser {
   #handleInvariableWord(word, orthography) {
     const invariables = this.#lexicon.filter((m) =>
       m.type === 'particle' ||
-            m.type === 'interrogative' ||
-            m.type === 'adverb' ||
-            m.type === 'adjective' ||
-            m.type === 'interjection' ||
-            m.type === 'numeral',
+      m.type === 'interrogative' ||
+      m.type === 'adverb' ||
+      m.type === 'adjective' ||
+      m.type === 'interjection' ||
+      m.type === 'numeral',
     );
     const match = invariables.find((m) => m.morpheme === word);
     if (match) {
@@ -185,8 +186,8 @@ export class NahuatlParser {
         }
       }
     } while ((!allParses || allParses.length === 0) &&
-                 excludedMorphemes.size < firstPassMorphemes.length &&
-                 attempts < maxAttempts);
+    excludedMorphemes.size < firstPassMorphemes.length &&
+      attempts < maxAttempts);
 
     if (!allParses || allParses.length === 0) {
       return {

@@ -1,4 +1,4 @@
-import { nahuatlLexicon } from './lexicon.js';
+import { nahuatlLexicon } from './lexicon/index.js';
 
 // --- Known Ambiguous Words ---
 export const knownAmbiguousWords = [
@@ -11,7 +11,7 @@ export const knownAmbiguousWords = [
     word: 'atl',
     parse: [
       [
-        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false }},
+        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false } },
         { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
       ],
     ],
@@ -21,7 +21,7 @@ export const knownAmbiguousWords = [
     parse: [
       [
         { morpheme: 'no', details: nahuatlLexicon.find((m) => m.morpheme === 'no' && m.type === 'prefix') },
-        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false }},
+        { morpheme: 'a', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false } },
         { morpheme: 'uh', details: nahuatlLexicon.find((m) => m.morpheme === 'uh' && m.type === 'suffix') },
       ],
     ],
@@ -30,7 +30,7 @@ export const knownAmbiguousWords = [
     word: 'altepetl',
     parse: [
       [
-        { morpheme: 'al', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false }},
+        { morpheme: 'al', details: { morpheme: 'a', type: 'noun_stem', english: 'water', countable: false, animate: false } },
         { morpheme: 'tepe', details: nahuatlLexicon.find((m) => m.morpheme === 'tepe' && m.type === 'noun_stem') },
         { morpheme: 'tl', details: nahuatlLexicon.find((m) => m.morpheme === 'tl' && m.type === 'suffix') },
       ],

@@ -1,4 +1,4 @@
-import { nahuatlLexicon } from './lexicon.js';
+import { nahuatlLexicon } from './lexicon/index.js';
 
 /**
  * Sorts an array of morphemes by their length in descending order
@@ -66,17 +66,17 @@ export function modernToClassical(word) {
   // Normalize
   let classical = normalizeInput(word);
   return (
-    	(classical = classical.replaceAll('iwkin', 'yuhquin')),
+    (classical = classical.replaceAll('iwkin', 'yuhquin')),
     (classical = classical.replaceAll('kis', 'quiz')),
-    	(classical = classical.replaceAll('kch', 'cch')),
-    	(classical = classical.replaceAll('kwa', 'cua')),
-    	(classical = classical.replaceAll('kwi', 'cui')),
-    	(classical = classical.replaceAll('kwe', 'cue')),
+    (classical = classical.replaceAll('kch', 'cch')),
+    (classical = classical.replaceAll('kwa', 'cua')),
+    (classical = classical.replaceAll('kwi', 'cui')),
+    (classical = classical.replaceAll('kwe', 'cue')),
     (classical = classical.replaceAll('kw', 'cuh')),
-    	(classical = classical.replaceAll('stl', 'ztl')),
-    	(classical = classical.replaceAll('aso', 'azo')),
+    (classical = classical.replaceAll('stl', 'ztl')),
+    (classical = classical.replaceAll('aso', 'azo')),
     (classical = classical.replaceAll('ts', 'tz')),
-    	(classical = classical.replaceAll('sa', 'za')),
+    (classical = classical.replaceAll('sa', 'za')),
     (classical = classical.replaceAll('sk', 'zc')),
     (classical = classical.replaceAll('se', 'ce')),
     (classical = classical.replaceAll('si', 'ci')),

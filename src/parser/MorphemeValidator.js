@@ -220,6 +220,20 @@ export class MorphemeValidator {
       return false;
     }
 
+    // Rule 5: Cannot have both te and c/qui prefixes
+    if (objectPrefixes.some((p) => p.morpheme === 'te') &&
+            (objectPrefixes.some((p) => p.morpheme === 'qui') ||
+             objectPrefixes.some((p) => p.morpheme === 'c'))) {
+      return false;
+    }
+
+    // Rule 6: Possessive prefixes (if present) must be at the beginning of the word
+    // e.g. 'tlaittalli' may be tla-itta-lli but not tla-i-tta-lli where a possessive appears mid-word
+    const possessiveIndexInWhole = prefixes.findIndex((m) => m.details && m.details.role === 'possessive');
+    if (possessiveIndexInWhole > 0) {
+      return false;
+    }
+
     return true;
   }
 
