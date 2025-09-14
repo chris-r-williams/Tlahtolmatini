@@ -9,6 +9,7 @@ export const particles = [
   { morpheme: 'cenca', type: 'particle', english: 'very' },
   { morpheme: 'huan', type: 'particle', english: 'and' },
   { morpheme: 'in', type: 'particle', english: 'the (definite article)' },
+  { morpheme: 'inihqueh', type: 'particle', english: 'these, those' },
   { morpheme: 'inin', type: 'particle', english: 'this' },
   { morpheme: 'inon', type: 'particle', english: 'that' },
   { morpheme: 'itztoc', type: 'particle', english: "it's here" },

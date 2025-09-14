@@ -94,7 +94,8 @@ export class NahuatlParser {
       m.type === 'adverb' ||
       m.type === 'adjective' ||
       m.type === 'interjection' ||
-      m.type === 'numeral',
+      m.type === 'numeral' ||
+      m.type === 'pronoun',
     );
     const match = invariables.find((m) => m.morpheme === word);
     if (match) {

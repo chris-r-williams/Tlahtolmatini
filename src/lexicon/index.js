@@ -3,7 +3,7 @@ import { prefixes } from './prefixes.js';
 import { nounStems } from './noun_stems.js';
 import { verbStems } from './verb_stems.js';
 import { suffixes } from './suffixes.js';
-import { interrogatives, adverbs, adjectives, interjections, numerals } from './others.js';
+import { interrogatives, adverbs, adjectives, interjections, numerals, pronouns } from './others.js';
 
 export const nahuatlLexicon = [
   ...particles,
@@ -16,4 +16,5 @@ export const nahuatlLexicon = [
   ...verbStems,
   ...nounStems,
   ...suffixes,
+  ...pronouns,
 ];

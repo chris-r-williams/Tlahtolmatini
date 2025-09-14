@@ -37,6 +37,7 @@ export const verbStems = [
   { morpheme: 'nemi', type: 'verb_stem', english: 'live' },
   { morpheme: 'nequi', type: 'verb_stem', english: 'want' },
   { morpheme: 'neci', type: 'verb_stem', english: 'seem' },
+  { morpheme: 'notza', type: 'verb_stem', english: 'call' },
   { morpheme: 'pano', type: 'verb_stem', english: 'pass' },
   { morpheme: 'pata', type: 'verb_stem', english: 'change' },
   { morpheme: 'patlani', type: 'verb_stem', english: 'fly', past: 'flew', pp: 'flown' },
