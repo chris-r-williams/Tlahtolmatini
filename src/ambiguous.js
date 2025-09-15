@@ -162,14 +162,4 @@ export const knownAmbiguousWords = [
       ],
     ],
   },
-  // {
-  //   word: 'nicah',
-  //   parse: [
-  //     [
-  //       { morpheme: 'ni', details: nahuatlLexicon.find((m) => m.morpheme === 'ni' && m.type === 'prefix' && m.role === 'subject' && m.person === 'first') },
-  //       { morpheme: 'cah', details: nahuatlLexicon.find((m) => m.morpheme === 'cah' && m.type === 'verb_stem') },
-  //       { translation: ' I am (in a location)' },
-  //     ],
-  //   ],
-  // },
 ];

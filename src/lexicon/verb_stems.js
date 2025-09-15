@@ -22,6 +22,7 @@ export const verbStems = [
   { morpheme: 'huetzca', type: 'verb_stem', english: 'laugh' },
   { morpheme: 'huica', type: 'verb_stem', english: 'sing', past: 'sang', pp: 'sung' },
   //{ morpheme: 'i', type: 'verb_stem', english: 'drink', past: 'drank', pp: 'drunk' },
+  { morpheme: 'ihcihui', type: 'verb_stem', english: 'hurry', past: 'hurried', thirdSing: 'hurries' },
   { morpheme: 'ihcuiloa', type: 'verb_stem', english: 'write', past: 'wrote', pp: 'written' },
   { morpheme: 'ihtoa', type: 'verb_stem', english: 'say', past: 'said', pp: 'said' },
   { morpheme: 'itta', type: 'verb_stem', english: 'see', past: 'saw', pp: 'seen' },

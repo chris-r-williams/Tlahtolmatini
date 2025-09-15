@@ -1,6 +1,7 @@
 import { sortByMorphemeLengthDesc, modernToClassical, classicalToModern, normalizeInput } from '../helper.js';
 import { nahuatlLexicon } from '../lexicon/index.js';
 import { knownAmbiguousWords } from '../ambiguous.js';
+import { checkIrregularVerbs } from '../irregular.js';
 import { NahuatlTranslator } from '../translator/NahuatlTranslator.js';
 import { MorphemeValidator } from './MorphemeValidator.js';
 import { BacktrackingParser } from './BacktrackingParser.js';
@@ -43,6 +44,19 @@ export class NahuatlParser {
     const ambiguousMatch = this.#handleAmbiguousWord(processedWord, orthography);
     if (ambiguousMatch) {
       return ambiguousMatch;
+    }
+
+    // Check for irregular verbs
+    const irregularMatch = checkIrregularVerbs(processedWord);
+    if (irregularMatch) {
+      if (orthography === 'modern') {
+        irregularMatch.parsings.forEach((parsing) => {
+          parsing.morphemes.forEach((m) => {
+            m.morpheme = classicalToModern(m.morpheme);
+          });
+        });
+      }
+      return irregularMatch;
     }
 
     // Check for invariable morphemes

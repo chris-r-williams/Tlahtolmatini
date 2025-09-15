@@ -3,6 +3,7 @@ export const interrogatives = [
   { morpheme: 'acquiya', type: 'interrogative', english: 'who' },
   { morpheme: 'aquin', type: 'interrogative', english: 'who (sg)' },
   { morpheme: 'aquihqueh', type: 'interrogative', english: 'who (pl)' },
+  { morpheme: 'can', type: 'interrogative', english: 'where' },
   { morpheme: 'canin', type: 'interrogative', english: 'where' },
   { morpheme: 'cuix', type: 'interrogative', english: 'interrogative particle (yes/no)' },
   { morpheme: 'quemman', type: 'interrogative', english: 'when' },
@@ -16,11 +17,15 @@ export const interrogatives = [
 ];
 
 export const adverbs = [
+  { morpheme: 'ahcan', type: 'adverb', english: 'nowhere' },
   { morpheme: 'namantzin', type: 'adverb', english: 'now' },
   { morpheme: 'nican', type: 'adverb', english: 'here' },
+  { morpheme: 'ompa', type: 'adverb', english: 'over there' },
+  { morpheme: 'oncan', type: 'adverb', english: 'there' },
 ];
 
 export const adjectives = [
+  { morpheme: 'cualli', type: 'adjective', english: 'good, beautiful' },
   { morpheme: 'cualtitoc', type: 'adjective', english: 'fine, okay' },
   { morpheme: 'cuecuetztzin', type: 'adjective', english: 'small' },
   { morpheme: 'hueyi', type: 'adjective', english: 'big' },
