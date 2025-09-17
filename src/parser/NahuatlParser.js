@@ -49,14 +49,18 @@ export class NahuatlParser {
     // Check for irregular verbs
     const irregularMatch = checkIrregularVerbs(processedWord);
     if (irregularMatch) {
-      if (orthography === 'modern') {
-        irregularMatch.parsings.forEach((parsing) => {
-          parsing.morphemes.forEach((m) => {
-            m.morpheme = classicalToModern(m.morpheme);
-          });
-        });
-      }
-      return irregularMatch;
+      // Create a deep copy to prevent issue with module-level constants
+      const result = {
+        success: irregularMatch.success,
+        parsings: irregularMatch.parsings.map((parsing) => ({
+          morphemes: parsing.morphemes.map((m) => ({
+            morpheme: orthography === 'modern' ? classicalToModern(m.morpheme) : m.morpheme,
+            details: { ...m.details },
+          })),
+          englishTranslation: parsing.englishTranslation,
+        })),
+      };
+      return result;
     }
 
     // Check for invariable morphemes
