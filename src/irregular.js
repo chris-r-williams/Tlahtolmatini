@@ -74,6 +74,14 @@ export const irregularVerbs = {
         ],
       },
       {
+        form: 'tiyaz',
+        translation: 'you (sg) go',
+        analysis: [
+          { morpheme: 'ti', details: { type: 'prefix', role: 'subject', person: 'second', number: 'singular' } },
+          { morpheme: 'yaz', details: { type: 'irregular_verb', english: 'go' } },
+        ],
+      },
+      {
         form: 'yauh',
         translation: 'he/she/it goes',
         analysis: [

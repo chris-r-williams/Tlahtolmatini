@@ -49,6 +49,7 @@ export const nounStems = [
   { morpheme: 'ixtiyol', type: 'noun_stem', english: 'eye', countable: true, animate: true },
   { morpheme: 'ixxayac', type: 'noun_stem', english: 'face', countable: true, animate: true },
   { morpheme: 'macehual', type: 'noun_stem', english: 'person', englishPlural: 'people', countable: true, animate: true },
+  { morpheme: 'mahuizo', type: 'noun_stem', english: 'honor', countable: true, animate: false },
   { morpheme: 'maxochi', type: 'noun_stem', english: 'gay man', englishPlural: 'gay men', countable: true, animate: true },
   { morpheme: 'me', type: 'noun_stem', english: 'mageuy', countable: true, animate: false },
   { morpheme: 'meca', type: 'noun_stem', english: 'rope', countable: true, animate: false },

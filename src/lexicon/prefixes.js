@@ -1,6 +1,8 @@
 export const prefixes = [
+  { morpheme: 'ah', type: 'prefix', role: 'negation', english: 'not' },
   { morpheme: 'am', type: 'prefix', role: 'subject', person: 'second', number: 'plural', english: 'you (pl)' },
   { morpheme: 'an', type: 'prefix', role: 'subject', person: 'second', number: 'plural', english: 'you (pl)' },
+  { morpheme: 'in', type: 'prefix', role: 'subject', person: 'second', number: 'plural', english: 'you (pl)' },
   { morpheme: 'n', type: 'prefix', role: 'subject', person: 'first', number: 'singular', english: 'I' },
   { morpheme: 'ni', type: 'prefix', role: 'subject', person: 'first', number: 'singular', english: 'I' },
   { morpheme: 't', type: 'prefix', role: 'subject', person: 'first', number: 'plural', english: 'we' },
@@ -41,5 +43,4 @@ export const prefixes = [
   { morpheme: 't', type: 'prefix', role: 'reflexive', person: 'first', number: 'plural', english: 'ourselves', usedWith: 'verb' },
   { morpheme: 'to', type: 'prefix', role: 'possessive', person: 'first', number: 'plural', english: 'our', usedWith: 'noun' },
   { morpheme: 'to', type: 'prefix', role: 'reflexive', person: 'first', number: 'plural', english: 'ourselves', usedWith: 'verb' },
-  { morpheme: 'ah', type: 'prefix', role: 'negation', english: 'not' },
 ];
