@@ -13,6 +13,7 @@ export const prefixes = [
   { morpheme: 'c', type: 'prefix', role: 'object', person: 'third', number: 'singular', english: 'him/her/it' },
   { morpheme: 'mitz', type: 'prefix', role: 'object', person: 'second', number: 'singular', english: 'you (sg)' },
   { morpheme: 'nech', type: 'prefix', role: 'object', person: 'first', number: 'singular', english: 'me' },
+  { morpheme: 'pil', type: 'prefix', role: 'sacred_diminutive', english: 'small' },
   { morpheme: 'qu', type: 'prefix', role: 'object', person: 'third', number: 'singular', english: 'him/her/it' },
   { morpheme: 'qui', type: 'prefix', role: 'object', person: 'third', number: 'singular', english: 'him/her/it' },
   { morpheme: 'quim', type: 'prefix', role: 'object', person: 'third', number: 'plural', english: 'them' },

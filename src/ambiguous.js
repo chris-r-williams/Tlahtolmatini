@@ -43,6 +43,25 @@ export const knownAmbiguousWords = [
     ],
   },
   {
+    word: 'atzin',
+    parse: [
+      [
+        { morpheme: 'a', details: a },
+        { morpheme: 'tzin', details: nahuatlLexicon.find((m) => m.morpheme === 'tzin' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'pilatzin',
+    parse: [
+      [
+        { morpheme: 'pil', details: nahuatlLexicon.find((m) => m.morpheme === 'pil' && m.type === 'prefix') },
+        { morpheme: 'a', details: a },
+        { morpheme: 'tzin', details: nahuatlLexicon.find((m) => m.morpheme === 'tzin' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
     word: 'etl',
     parse: [
       [
@@ -102,6 +121,25 @@ export const knownAmbiguousWords = [
         { morpheme: 'no', details: nahuatlLexicon.find((m) => m.morpheme === 'no' && m.type === 'prefix') },
         { morpheme: 'e', details: e },
         { morpheme: 'uh', details: nahuatlLexicon.find((m) => m.morpheme === 'uh' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'etzin',
+    parse: [
+      [
+        { morpheme: 'e', details: e },
+        { morpheme: 'tzin', details: nahuatlLexicon.find((m) => m.morpheme === 'tzin' && m.type === 'suffix') },
+      ],
+    ],
+  },
+  {
+    word: 'piletzin',
+    parse: [
+      [
+        { morpheme: 'pil', details: nahuatlLexicon.find((m) => m.morpheme === 'pil' && m.type === 'prefix') },
+        { morpheme: 'e', details: e },
+        { morpheme: 'tzin', details: nahuatlLexicon.find((m) => m.morpheme === 'tzin' && m.type === 'suffix') },
       ],
     ],
   },

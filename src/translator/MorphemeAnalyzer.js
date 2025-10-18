@@ -20,13 +20,15 @@ export class MorphemeAnalyzer {
       isImperfectVerb: false,
       isLliParticiple: false,
       isNominalizedByOtherSuffix: false,
-      isTicAdjective: false, // NEW: Handle -tic suffix
+      isTicAdjective: false,
       otherNominalizingSuffixDetails: null,
-      ticSuffixDetails: null, // NEW: Store -tic suffix details
+      ticSuffixDetails: null,
       isRightmostStemNominalizedVerb: false,
       tlaObjectPresent: false,
       teObjectPresent: false,
       hasPluralSuffix: false,
+      hasDiminutivePrefix: false,
+      hasDiminutiveSuffix: false,
       parsedMorphemes,
     };
 
@@ -64,6 +66,8 @@ export class MorphemeAnalyzer {
       analysis.negationPrefixDetails = details;
     } else if (details.category === 'imperative') {
       analysis.imperativePrefixDetails = details;
+    } else if (details.role === 'sacred_diminutive') {
+      analysis.hasDiminutivePrefix = true;
     } else if (morpheme === 'tla' && details.role === 'object') {
       analysis.tlaObjectPresent = true;
     } else if (morpheme === 'te' && details.role === 'object') {
@@ -74,6 +78,15 @@ export class MorphemeAnalyzer {
   _analyzeSuffix(morpheme, details, analysis) {
     if (details.category === 'imperfect') {
       analysis.isImperfectVerb = true;
+    }
+
+    // Handle sacred/diminutive suffix
+    if (details.category === 'sacred_diminutive') {
+      analysis.hasDiminutiveSuffix = true;
+      if (details.isPlural) {
+        analysis.hasPluralSuffix = true;
+      }
+      return;
     }
 
     // Handle -tic suffix

@@ -287,6 +287,13 @@ export class CoreStringBuilder {
       string = analysis.primaryNounStemDetails.english;
     }
 
+    // Add sacred/diminutive prefixes based on combinations
+    if (analysis.hasDiminutivePrefix && analysis.hasDiminutiveSuffix) {
+      string = 'sacred ' + string;
+    } else if (analysis.hasDiminutivePrefix || analysis.hasDiminutiveSuffix) {
+      string = 'small ' + string;
+    }
+
     return { string, requiresWrapper: true };
   }
 

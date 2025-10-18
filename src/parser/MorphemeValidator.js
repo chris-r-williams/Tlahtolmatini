@@ -27,7 +27,7 @@ export class MorphemeValidator {
       if (!this.#validateInanimateNounRules(primaryStem, prefixes, suffixes)) {
         return false;
       }
-      if (!this.#validatePrefixRules(prefixes)) {
+      if (!this.#validatePrefixRules(prefixes, suffixes)) {
         return false;
       }
       if (!this.#validateSuffixRules(pluralSuffixes)) {
@@ -190,11 +190,13 @@ export class MorphemeValidator {
   /**
      * Validates rules about prefix combinations and ordering
      */
-  #validatePrefixRules(prefixes) {
+  #validatePrefixRules(prefixes, suffixes) {
     const hasReflexive = prefixes.some((p) => p.details.role === 'reflexive');
     const hasObject = prefixes.some((p) => p.details.role === 'object');
     const hasPossessive = prefixes.some((p) => p.details.role === 'possessive');
     const hasSubject = prefixes.some((p) => p.details.role === 'subject');
+    const hasPilPrefix = prefixes.some((p) => p.morpheme === 'pil' && p.details.role === 'sacred_diminutive');
+    const hasTzinSuffix = suffixes && suffixes.some((s) => s.morpheme === 'tzin' || s.morpheme === 'tzitzin');
 
     // Rule 1: A verb is invalid if it has both a reflexive prefix and a direct object prefix
     if (hasReflexive && hasObject) {
@@ -234,6 +236,11 @@ export class MorphemeValidator {
     // e.g. 'tlaittalli' may be tla-itta-lli but not tla-i-tta-lli where a possessive appears mid-word
     const possessiveIndexInWhole = prefixes.findIndex((m) => m.details && m.details.role === 'possessive');
     if (possessiveIndexInWhole > 0) {
+      return false;
+    }
+
+    // Rule 7: 'pil' can only be treated as a prefix when 'tzin' or 'tzitzin' suffix is present
+    if (hasPilPrefix && !hasTzinSuffix) {
       return false;
     }
 
