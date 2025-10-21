@@ -3,6 +3,67 @@
 % Based on Andrews' Introduction to Classical Nahuatl
 
 % ============================================================================
+% PARTICLE DEFINITIONS
+% ============================================================================
+
+particle('ach').
+particle('anca').
+particle('aoc').
+particle('at').
+particle('auh').
+particle('āuh').
+particle('ax').
+particle('aya').
+particle('ayoc').
+particle('ca').
+particle('cuix').
+particle('elele').
+particle('hue').
+particle('hui').
+particle('hueya').
+particle('ihyo').
+particle('in').
+particle('iye').
+particle('mā').
+particle('mah').
+particle('mec').
+particle('nec').
+particle('nō').
+particle('o').
+particle('ō').
+particle('oc').
+particle('quin').
+particle('tēl').
+particle('tlā').
+particle('xi').
+particle('xiuh').
+particle('yahua').
+particle('ye').
+particle('zā').
+particle('zan').
+particle('zo').
+
+particle_prefix('ah', negative).
+particle_prefix('ca', negative).
+
+particle_suffix('tzin', honorific).
+
+% ============================================================================
+% PARTICLE PARSING
+% ============================================================================
+
+% Parse particle: [particle_prefix]+particle+[particle_suffix]
+parse_particle(Word, Parse) :-
+    particle(CoreParticle),
+    (Prefix = '' ; particle_prefix(Prefix, PrefixType)),
+    (Suffix = '' ; particle_suffix(Suffix, SuffixType)),
+    atom_concat(Prefix, CoreParticle, Temp),
+    atom_concat(Temp, Suffix, Word),
+    (Prefix = '' -> PrefixInfo = none ; PrefixInfo = prefix(Prefix, PrefixType)),
+    (Suffix = '' -> SuffixInfo = none ; SuffixInfo = suffix(Suffix, SuffixType)),
+    Parse = particle(prefix:PrefixInfo, core:CoreParticle, suffix:SuffixInfo).
+
+% ============================================================================
 % VERB STEM DEFINITIONS
 % ============================================================================
 % verb_stem(Verb, ImperfectiveStem, PerfectiveStem, HypotheticalStem, Class)
@@ -48,6 +109,24 @@ dir('on').
 % VALENCE POSITIONS
 % ============================================================================
 
+% Valence assimilations
+im('im').
+im('in').
+im('iz').
+im('ix').
+
+itz('itz').
+itz('ich').
+itz('it').
+itz('i').
+itz('iz').
+itz('ix').
+
+ech('ēch').
+ech('et').
+ech('ez').
+ech('ex').
+
 % Dyadic valence position 1 (va1)
 va1_dyadic('c').
 va1_dyadic('qu').
@@ -61,23 +140,14 @@ va1_dyadic('t').
 % Third person va1 ('c', 'qu', 'qui')
 va2_dyadic('c', '').
 va2_dyadic('qu', '').
-va2_dyadic('qu', 'im').
-va2_dyadic('qu', 'in').
-va2_dyadic('qu', 'iz').
-va2_dyadic('qu', 'ix').
 va2_dyadic('qui', '').
+va2_dyadic('qu', Im) :- im(Im).
 
 % Non-third person va1
-% TODO add  etz, et, ez, or ex. 
-va2_dyadic('m', 'itz').
-va2_dyadic('m', 'ich').
-va2_dyadic('m', 'it').
-va2_dyadic('m', 'i').
-va2_dyadic('m', 'iz').
-va2_dyadic('m', 'ix').
-va2_dyadic('am', 'ēch').
-va2_dyadic('n', 'ēch').
-va2_dyadic('t', 'ēch').
+va2_dyadic('m', Itz) :- itz(Itz).
+va2_dyadic('am', Ech) :- ech(Ech).
+va2_dyadic('n', Ech) :- ech(Ech).
+va2_dyadic('t', Ech) :- ech(Ech).
 
 % Reflexive va2
 va2_dyadic('n', 'o').
@@ -397,10 +467,12 @@ select_stem(hypothetical, _, _, HypStem, HypStem).
 % ============================================================================
 
 parse(Word, Parse) :-
-    (   parse_dyadic(Word, Parse)
+    (   parse_particle(Word, Parse)
+    ;   parse_dyadic(Word, Parse)
     ;   parse_monadic(Word, Parse)
     ;   parse_intransitive(Word, Parse)
     ).
+
 
 % ============================================================================
 % MACRONIZATION
