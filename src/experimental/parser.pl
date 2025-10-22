@@ -3,8 +3,70 @@
 % Based on Andrews' Introduction to Classical Nahuatl
 
 % ============================================================================
-% PARTICLE DEFINITIONS
+% TOP-LEVEL VOCABLE DEFINITION
 % ============================================================================
+
+% Vocable can be either an expanded particle or a nuclear clause
+vocable(Vocable, Parse) :-
+    ( expanded_particle(Vocable, Parse)
+    ; nuclear_clause(Vocable, Parse)
+    ).
+
+% Top-level parse predicate
+parse(SurfaceVocable, Parse) :-
+    surface_to_underlying(SurfaceVocable, UnderlyingVocable),
+    vocable(UnderlyingVocable, Parse).
+
+% ============================================================================
+% PHONOLOGICAL RULE: FINAL VOWEL SHORTENING
+% ============================================================================
+% This predicate generates potential underlying forms from a surface form
+% based on the rule that final long vowels (V̄) or final V̄h shorten.
+% We are reversing this: a surface V or Vh could be an underlying V̄ or V̄h.
+
+% Vowel mappings
+long_vowel('a', 'ā').
+long_vowel('e', 'ē').
+long_vowel('i', 'ī').
+long_vowel('o', 'ō').
+
+% surface_to_underlying(Surface, Underlying)
+% A surface form can always be its own underlying form (no change)
+surface_to_underlying(Surface, Surface).
+
+% Rule 1: ...V# -> ...V̄# (Reversed)
+% A surface form ending in a short vowel could come from an underlying
+% form ending in a long vowel.
+surface_to_underlying(Surface, Underlying) :-
+    atom_concat(Root, ShortV, Surface),
+    long_vowel(ShortV, LongV),
+    atom_concat(Root, LongV, Underlying).
+
+% Rule 2: ...Vh# -> ...V̄h# (Reversed)
+% A surface form ending in Vh could come from an underlying V̄h.
+surface_to_underlying(Surface, Underlying) :-
+    atom_concat(Root, ShortVh, Surface),
+    atom_concat(ShortV, 'h', ShortVh),
+    long_vowel(ShortV, LongV),
+    atom_concat(LongV, 'h', LongVh),
+    atom_concat(Root, LongVh, Underlying).
+
+% ============================================================================
+% EXPANDED PARTICLE
+% ============================================================================
+
+% An expanded particle can be a particle plus a negativizing prefix, an honorific suffix, or neither
+expanded_particle(Vocable, [negativizing_prefix, Particle]) :-
+    negativizing_prefix(Prefix),
+    particle(Particle),
+    atom_concat(Prefix, Particle, Vocable).
+expanded_particle(Vocable, [Particle, honorific]) :-
+    particle(Particle),
+    honorific(Hon),
+    atom_concat(Particle, Hon, Vocable).
+expanded_particle(Vocable, Particle) :-
+    particle(Particle),
+    Vocable = Particle.
 
 particle('ach').
 particle('anca').
@@ -43,49 +105,89 @@ particle('zā').
 particle('zan').
 particle('zo').
 
-particle_prefix('ah', negative).
-particle_prefix('ca', negative).
-
-particle_suffix('tzin', honorific).
-
 % ============================================================================
-% PARTICLE PARSING
+% NUCLEAR CLAUSE
 % ============================================================================
 
-% Parse particle: [particle_prefix]+particle+[particle_suffix]
-parse_particle(Word, Parse) :-
-    particle(CoreParticle),
-    (Prefix = '' ; particle_prefix(Prefix, PrefixType)),
-    (Suffix = '' ; particle_suffix(Suffix, SuffixType)),
-    atom_concat(Prefix, CoreParticle, Temp),
-    atom_concat(Temp, Suffix, Word),
-    (Prefix = '' -> PrefixInfo = none ; PrefixInfo = prefix(Prefix, PrefixType)),
-    (Suffix = '' -> SuffixInfo = none ; SuffixInfo = suffix(Suffix, SuffixType)),
-    Parse = particle(prefix:PrefixInfo, core:CoreParticle, suffix:SuffixInfo).
+% A nuclear clause can be an expanded VNC or an NNC (not yet implemented)
+nuclear_clause(Vocable, Parse) :-
+    ( expanded_vnc(Vocable, Parse)
+    ; nnc(Vocable, Parse)  % Stub for now
+    ).
+
+% An expanded VNC can have a negativizing prefix or not
+expanded_vnc(Vocable, [negativizing_prefix, VNC]) :-
+    negativizing_prefix(Prefix),
+    atom_concat(Prefix, Rest, Vocable),
+    vnc(Rest, VNC).
+expanded_vnc(Vocable, Parse) :-
+    vnc(Vocable, Parse).
+
+% A VNC can be either intransitive or transitive
+vnc(Vocable, Parse) :-
+    ( intransitive_vnc(Vocable, Parse)
+    ; transitive_vnc(Vocable, Parse)
+    ).
 
 % ============================================================================
-% VERB STEM DEFINITIONS
+% VERB STEM TYPES
 % ============================================================================
-% verb_stem(Verb, ImperfectiveStem, PerfectiveStem, HypotheticalStem, Class)
+% verb_stem_type(Verb, ImperfectiveStem, PerfectiveStem, HypotheticalStem, Class, TransitivityType)
 
-verb_stem(temo, 'temō', 'temōc', 'temō', a2, intransitive).
-verb_stem(ihcuiloa, 'ihcuiloā', 'ihcuiloh', 'ihcuilō', c, transitive).
-verb_stem(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, transitive).
-verb_stem(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, intransitive).
-verb_stem(chihua, 'chīhua', 'chīhuac', 'chīhuā', b, transitive).
-verb_stem(tlazohtla, 'tlazohtlā', 'tlazohtlac', 'tlazohtlā', b, transitive).
-verb_stem(zoma, 'zōmā', 'zōmah', 'zōmā', b, transitive).
-verb_stem(choloa, 'choloā', 'choloh', 'cholō', c, intransitive).
-verb_stem(pano, 'panō', 'panōc', 'panō', b, intransitive).
-verb_stem(nequi, 'nequi', 'nec', 'nequi', b, transitive).
-verb_stem(qui, 'qui', 'quic', 'qui', b, transitive).
-verb_stem(cochi, 'cochi', 'cochic', 'cochi', a1, intransitive).
+verb_stem_type(temo, 'temō', 'temōc', 'temō', a2, intransitive).
+verb_stem_type(ihcuiloa, 'ihcuiloā', 'ihcuiloh', 'ihcuilō', c, transitive).
+verb_stem_type(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, transitive).
+verb_stem_type(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, intransitive).
+verb_stem_type(chihua, 'chīhua', 'chīhuac', 'chīhuā', b, transitive).
+verb_stem_type(tlazohtla, 'tlazohtlā', 'tlazohtlac', 'tlazohtlā', b, transitive).
+verb_stem_type(zoma, 'zōmā', 'zōmah', 'zōmā', b, transitive).
+verb_stem_type(choloa, 'choloā', 'choloh', 'cholō', c, intransitive).
+verb_stem_type(pano, 'panō', 'panōc', 'panō', b, intransitive).
+verb_stem_type(nequi, 'nequi', 'nec', 'nequi', b, transitive).
+verb_stem_type(qui, 'qui', 'quic', 'qui', b, transitive).
+verb_stem_type(cochi, 'cochi', 'cochic', 'cochi', a1, intransitive).
 
 % ============================================================================
-% PERSON MARKERS
+% TENSE MARKERS
 % ============================================================================
 
-pers_zero('').
+% Present tense
+tense('').
+
+% Future tense
+tense('z').
+
+% Customary tense
+tense('ni').
+
+% Past tenses
+tense('ya').  % Imperfect
+tense('ca').  % Distant past
+
+% Other tenses
+tense('h').   % Admonitive
+
+% Basic predicates
+negativizing_prefix('ah').
+negativizing_prefix('ca').
+
+honorific('tzin').
+
+passive_marker('lō').
+passive_marker('ō').
+
+% For use with compound stems, only the non-empty forms are 'optional'
+%passive_marker_optional(PassiveMarkerStr) :- passive_marker(PassiveMarkerStr).
+%passive_marker_optional('').
+
+% Person markers
+pers1(pers_zero).
+pers1(pers_ni).
+pers1(pers_ti).
+pers1(pers_an).
+pers1(pers_xi).
+
+% Person prefix mapping
 pers_ni('ni').
 pers_ni('n').
 pers_ti('ti').
@@ -94,74 +196,27 @@ pers_an('an').
 pers_an('am').
 pers_xi('xi').
 pers_xi('x').
-
-% ============================================================================
-% PLURAL SUFFIX MARKERS
-% ============================================================================
+pers_zero('').
 
 plural_suffix_in('in').
 plural_suffix_in('ih').
 
-% ============================================================================
-% DIRECTIONAL MARKERS
-% ============================================================================
+num1('').
+num1('qu').
+num1('c').
+num1('t').
 
-dir('huāl').
-dir('on').
+num2('').
+num2('h').
+num2('ān').
+num2('eh').
+num2(plural_suffix_in).
 
-% ============================================================================
-% VALENCE POSITIONS
-% ============================================================================
 
-% Valence assimilations
-im('im').
-im('in').
-im('iz').
-im('ix').
-
-itz('itz').
-itz('ich').
-itz('it').
-itz('i').
-itz('iz').
-itz('ix').
-
-ech('ēch').
-ech('et').
-ech('ez').
-ech('ex').
-
-% Dyadic valence position 1 (va1)
-va1_dyadic('c').
-va1_dyadic('qu').
-va1_dyadic('qui').
-va1_dyadic('m').
-va1_dyadic('am').
-va1_dyadic('n').
-va1_dyadic('t').
-
-% Dyadic valence position 2 (va2) - depends on va1
-% Third person va1 ('c', 'qu', 'qui')
-va2_dyadic('c', '').
-va2_dyadic('qu', '').
-va2_dyadic('qui', '').
-va2_dyadic('qu', Im) :- im(Im).
-
-% Non-third person va1
-va2_dyadic('m', Itz) :- itz(Itz).
-va2_dyadic('am', Ech) :- ech(Ech).
-va2_dyadic('n', Ech) :- ech(Ech).
-va2_dyadic('t', Ech) :- ech(Ech).
-
-% Reflexive va2
-va2_dyadic('n', 'o').
-va2_dyadic('m', 'o').
-va2_dyadic('t', 'o').
-
-% Monadic valence position
-va1_monadic('ne').
-va1_monadic('tē').
-va1_monadic('tla').
+% Numbers structure
+nums([Num1, Num2]) :-
+    num1(Num1),
+    num2(Num2).
 
 % ============================================================================
 % VNC PARADIGMS from APPENDIX A
@@ -356,163 +411,282 @@ valid_combo(pers_an, append(perfective, 'hua'), 'h', 't', plural_suffix_in, [a1]
 valid_combo(pers_zero, append(perfective, 'hua'), 'h', 't', plural_suffix_in, [a1]). valid_combo(pers_zero, append(perfective, 'lo'), 'h', 't', plural_suffix_in, [a2]). valid_combo(pers_zero, append(perfective, 'o'), 'h', 't', plural_suffix_in, [a2]).
 */
 
-% ============================================================================
-% COMPOUND VERB STEMS
-% ============================================================================
+directional_prefix('huāl').
+directional_prefix('on').
 
-% Definition of compound verb stems
-compound_verb_stem(future_embed_compound(HypotheticalStem, PassiveMarker, MatrixStem), Class, TransitivityType) :-
-    verb_stem(_, _, _, HypotheticalStem, _, TransitivityType), % Get hypothetical stem
-    (PassiveMarker = '' ; PassiveMarker = 'lō' ; PassiveMarker = 'ō'),
-    (MatrixStem = 'nequi' ; MatrixStem = 'qui'),
-    Class = b. % Both nequi and qui are class b
+% parse_vnc_root(Root, StemStr, PrefixStructure)
+% Handles the optional directional prefix before the stem
+parse_vnc_root(Root, StemStr, directional_prefix(Prefix)) :-
+    directional_prefix(Prefix),
+    atom_concat(Prefix, StemStr, Root).
+parse_vnc_root(Root, StemStr, no_directional_prefix) :-
+    StemStr = Root.
 
-% Stub for shared object compound - to be implemented
-compound_verb_stem(shared_object_compound(_), _, _) :- false.
+% valence_precedes_dir(ValenceType)
+% True if Dir comes AFTER Valence (i.e., the default case)
+valence_precedes_dir(ValenceType) :-
+    \+ dir_precedes_valence(ValenceType).
 
-% Stub for recursive compound - to be implemented
-compound_verb_stem(recursive_compound(_), _, _) :- false.
+% dir_precedes_valence(ValenceType)
+% True if Dir comes BEFORE Valence (the special case)
+dir_precedes_valence(ValenceType) :-
+    % Case 1: Monadic ('tē' or 'tla') with empty va2 (i.e., monadic)
+    ValenceType = va(VAStr),
+    member(VAStr, ['tē', 'tla']).
+dir_precedes_valence(ValenceType) :-
+    % Case 2: Dyadic Valence, reflexive va1 ('n', 'm', 't')
+    ValenceType = [VA1, _],
+    member(VA1, ['n', 'm', 't']).
 
-% ============================================================================
-% STEM SHORTENING
-% ============================================================================
-
-% Shorten stem if it ends in long vowel and followed by nothing or only 'h'
-shorten_stem(Stem, Rest, ShortenedStem) :-
-    (Rest = '' ; Rest = 'h'),
-    atom_chars(Stem, Chars),
-    reverse(Chars, [LastChar|RevRest]),
-    member([LastChar, ShortChar], [['ā','a'], ['ē','e'], ['ī','i'], ['ō','o'], ['ū','u']]),
-    !,
-    reverse([ShortChar|RevRest], ShortenedChars),
-    atom_chars(ShortenedStem, ShortenedChars).
-shorten_stem(Stem, _, Stem).
-
-% ============================================================================
-% PERSON PREFIX HANDLING
-% ============================================================================
-
-% Get person prefix value, considering vowel coalescence
-get_pers_value(PersType, StemAtom, PersValue) :-
-    call(PersType, BasePers),
-    atom_chars(StemAtom, [FirstChar|_]),
-    (   member(FirstChar, [a,e,i,o,u,'ā','ē','ī','ō','ū']),
-        atom_chars(BasePers, BaseChars),
-        (BaseChars = [] -> PersValue = BasePers
-        ; reverse(BaseChars, [LastPersChar|_]),
-          member(LastPersChar, [i,n,t,m,x])
-        -> atom_chars(PersValue, [LastPersChar])  % Use shortened form before vowel
-        ;  PersValue = BasePers)
-    ;   PersValue = BasePers).
-
-% ============================================================================
-% VNC FORMULAS
-% ============================================================================
-
-% Intransitive VNC: pers1+[dir](STEM)tns+num1-num2
-parse_intransitive(Word, Parse) :-
-    valid_combo(PersType, StemType, Tns, Num1, Num2, Classes),
-    get_final_stem(StemType, _, _, _, Verb, Class, Stem, intransitive),  % Must be intransitive
-    member(Class, Classes),
-    get_pers_value(PersType, Stem, Pers1),
-    (Dir1 = '' ; dir(Dir1)),
-    atom_concat(Tns, Num1, Rest1),
-    atom_concat(Rest1, Num2, Rest),
-    shorten_stem(Stem, Rest, FinalStem),
-    atom_concat(Pers1, Dir1, P1Final),
-    atom_concat(P1Final, FinalStem, P2Final),
-    atom_concat(P2Final, Tns, P3Final),
-    atom_concat(P3Final, Num1, P4Final),
-    atom_concat(P4Final, Num2, Word),
-    Parse = intransitive(verb:Verb, pers1:Pers1, dir:Dir1, stem:FinalStem, 
-                         stem_type:StemType, tns:Tns, num1:Num1, num2:Num2).
-
-% Monadic Transitive VNC: pers1+[dir]+va1+[dir](STEM)tns+num1-num2
-parse_monadic(Word, Parse) :-
-    valid_combo(PersType, StemType, Tns, Num1, Num2, Classes),
-    get_final_stem(StemType, _, _, _, Verb, Class, Stem, transitive),  % Must be transitive
-    member(Class, Classes),
-    get_pers_value(PersType, Stem, Pers1),
-    (Dir1 = '' ; dir(Dir1)),
-    va1_monadic(Va1),
-    (Dir2 = '' ; dir(Dir2)),
-    \+ (Dir1 \= '', Dir2 \= ''),  % Dir cannot be in both positions
-    atom_concat(Tns, Num1, Rest1),
-    atom_concat(Rest1, Num2, Rest),
-    shorten_stem(Stem, Rest, FinalStem),
-    atom_concat(Pers1, Dir1, P1Final),
-    atom_concat(P1Final, Va1, P2Final),
-    atom_concat(P2Final, Dir2, P3Final),
-    atom_concat(P3Final, FinalStem, P4Final),
-    atom_concat(P4Final, Tns, P5Final),
-    atom_concat(P5Final, Num1, P6Final),
-    atom_concat(P6Final, Num2, Word),
-    Parse = monadic(verb:Verb, pers1:Pers1, dir1:Dir1, va1:Va1, dir2:Dir2, 
-                    stem:FinalStem, stem_type:StemType, tns:Tns, num1:Num1, num2:Num2).
-
-% Dyadic Transitive VNC: pers1+[dir]+va1-va2+[dir](STEM)tns+num1-num2
-parse_dyadic(Word, Parse) :-
-    valid_combo(PersType, StemType, Tns, Num1, Num2, Classes),
-    get_final_stem(StemType, _, _, _, Verb, Class, Stem, transitive),  % Must be transitive
-    member(Class, Classes),
-    get_pers_value(PersType, Stem, Pers1),
-    (Dir1 = '' ; dir(Dir1)),
-    va1_dyadic(Va1),
-    va2_dyadic(Va1, Va2),
-    (Dir2 = '' ; dir(Dir2)),
-    \+ (Dir1 \= '', Dir2 \= ''),  % Dir cannot be in both positions
-    atom_concat(Tns, Num1, Rest1),
-    atom_concat(Rest1, Num2, Rest),
-    shorten_stem(Stem, Rest, FinalStem),
-    atom_concat(Pers1, Dir1, P1Final),
-    atom_concat(P1Final, Va1, P2Final),
-    atom_concat(P2Final, Va2, P3Final),
-    atom_concat(P3Final, Dir2, P4Final),
-    atom_concat(P4Final, FinalStem, P5Final),
-    atom_concat(P5Final, Tns, P6Final),
-    atom_concat(P6Final, Num1, P7Final),
-    atom_concat(P7Final, Num2, Word),
-    Parse = dyadic(verb:Verb, pers1:Pers1, dir1:Dir1, va1:Va1, va2:Va2, dir2:Dir2,
-                   stem:FinalStem, stem_type:StemType, tns:Tns, num1:Num1, num2:Num2).
-
-% Helper to select stem based on type
-select_stem(imperfective, ImpStem, _, _, ImpStem).
-select_stem(perfective, _, PerfStem, _, PerfStem).
-select_stem(hypothetical, _, _, HypStem, HypStem).
-
-% Helper to build future embed compound stem
-build_future_embed_compound(HypStem, PassiveMark, MatrixStem, CompoundStem) :-
-    (PassiveMark = '' ; PassiveMark = 'lō' ; PassiveMark = 'ō'),
-    atom_concat(PassiveMark, 'z', Temp1),
-    atom_concat(HypStem, Temp1, Temp2),
-    atom_concat(Temp2, MatrixStem, CompoundStem).
-
-% Helper to get final stem (either regular or compound)
-get_final_stem(StemType, ImpStem, PerfStem, HypStem, Verb, Class, FinalStem, TransitivityType) :-
-    (   % Regular verb stem
-        verb_stem(Verb, ImpStem, PerfStem, HypStem, Class, TransitivityType),
-        select_stem(StemType, ImpStem, PerfStem, HypStem, FinalStem)
-    ;   % Future embed compound
-        StemType = imperfective,  % Matrix verb must be in imperfective
-        verb_stem(_, MatrixStem, _, _, b, transitive),  % Matrix verb details
-        (MatrixStem = 'nequi' ; MatrixStem = 'qui'),
-        verb_stem(Verb, _, _, HypStem, _, TransitivityType),  % Embed verb details
-        (PassiveMark = '' ; PassiveMark = 'lō' ; PassiveMark = 'ō'),
-        build_future_embed_compound(HypStem, PassiveMark, MatrixStem, FinalStem),
-        Class = b  % Both nequi and qui are class b
+% parse_valence_and_root(Rest1, ValenceType, ValenceStr, Root, PrefixStructure)
+% This predicate manages the Directional Prefix placement logic.
+parse_valence_and_root(Rest1, ValenceType, ValenceStr, Root, PrefixStructure) :-
+    valence_type(ValenceType, ValenceStr),
+    ( dir_precedes_valence(ValenceType) ->
+        % PATH A: Directional Prefix is BEFORE Valence Marker (Dir + Valence + Root)
+        ( directional_prefix(DirStr),
+          atom_concat(DirStr, RestA, Rest1),
+          atom_concat(ValenceStr, Root, RestA),
+          PrefixStructure = directional_prefix(DirStr)
+        ; % OR: No directional prefix (Valence + Root)
+          atom_concat(ValenceStr, Root, Rest1),
+          PrefixStructure = no_directional_prefix
+        )
+    ;
+        % PATH B: Directional Prefix is AFTER Valence Marker (Valence + Dir + Root)
+        atom_concat(ValenceStr, RestB, Rest1),
+        parse_vnc_root(RestB, Root, PrefixStructure) % Use existing helper
     ).
 
+% Intransitive VNC definition
+% The formula for an intransitive VNC is: Subject + Predicate
+% where the subject is: Pers + ... + Num1 + Num2
+% and the predicate is: [Dir_prefix] + Stem + Tense
+% with the predicate being embedded in the subject as: Pers + ([Dir_prefix] + Stem + Tense) + Num1 + Num2
+% e.g. ticochiyah - we were sleeping
+% pers(ti) + ([] + stem(cochi) + tense(ya)) + num1() + num2(h)
+intransitive_vnc(Vocable, vnc(Pers1Type, Predicate, Nums)) :-
+    % 1. Parse person prefix (Pers)
+    pers1(Pers1Type),
+    pers_prefix(Pers1Type, PersPrefix),
+    atom_concat(PersPrefix, Rest1, Vocable),
+    
+    % 2. Parse Numbers (Num1 + Num2) from the end of Rest1
+    nums(Nums),
+    nums_string(Nums, NumsStr),
+    atom_concat(RootWithTense, NumsStr, Rest1), % Rest1 = RootWithTense + NumsStr
+    
+    % 3. Parse Tense (TenseStr) from the end of RootWithTense
+    tense(TenseStr),
+    atom_concat(Root, TenseStr, RootWithTense), % RootWithTense = Root + TenseStr
+    
+    % 4. Parse the Root to check for Directional Prefix and isolate StemStr
+    parse_vnc_root(Root, StemStr, DirectionalPrefix),
+    
+    % 5. Identify Stem (StemStr) and its properties
+    ( % Regular verb stem
+      verb_stem_type(_, Imperfective, Perfective, Hypothetical, Class, intransitive),
+      ( StemStr = Imperfective, StemType = imperfective, StemStructure = StemStr
+      ; StemStr = Perfective, StemType = perfective, StemStructure = StemStr
+      ; StemStr = Hypothetical, StemType = hypothetical, StemStructure = StemStr
+      )
+    ; % Compound stem (matrix stem is always imperfective)
+      compound_stem(StemStr, StemStructure, Class, intransitive),
+      StemType = imperfective
+    ),
+    
+    % 6. Build predicate structure (now includes the optional directional prefix)
+    ( DirectionalPrefix = no_directional_prefix ->
+      Predicate = predicate(StemStructure, TenseStr)
+    ;
+      Predicate = predicate([DirectionalPrefix, StemStructure], TenseStr)
+    ),
+    
+    % 7. Check valid combinations
+    Nums = [Num1, Num2],
+    valid_combo(Pers1Type, StemType, TenseStr, Num1, Num2, ClassList),
+    member(Class, ClassList).
+
+% Transitive VNC definition
+% The formula for a transitive VNC is: Subject + Predicate
+% where the subject is: Pers + ... + Num1 + Num2
+% and the predicate is: Valence + Stem + Tense
+% with the predicate being embedded in the subject as: Pers + [Dir] + Valence + [Dir] + Stem + Tense + Num1 + Num2
+% e.g. ticnequiyah - we were wanting it
+% pers(ti) + (valence(c) + [] + stem(nequi) + tense(ya)) + num1() + num2(h)
+transitive_vnc(Vocable, vnc(Pers1Type, Predicate, Nums)) :-
+    % 1. Parse person prefix (Pers)
+    pers1(Pers1Type),
+    pers_prefix(Pers1Type, PersPrefix),
+    atom_concat(PersPrefix, Rest1, Vocable),
+    
+    % 2. Parse Valence, Directional Prefix, and the Root (Valence/Dir)
+    % Rest1 = ([Dir] or []) + Valence + ([Dir] or []) + RootWithTense + NumsStr
+    parse_valence_and_root(Rest1, ValenceType, _, RootWithTenseAndNums, DirectionalPrefix),
+    
+    % 3. Parse Numbers (Num1 + Num2) from the end of RootWithTenseAndNums
+    nums(Nums),
+    nums_string(Nums, NumsStr),
+    atom_concat(RootWithTense, NumsStr, RootWithTenseAndNums), % RootWithTenseAndNums = RootWithTense + NumsStr
+    
+    % 4. Parse Tense (TenseStr) from the end of RootWithTense
+    tense(TenseStr),
+    atom_concat(StemStr, TenseStr, RootWithTense), % RootWithTense = StemStr + TenseStr
+    
+    % 5. Identify Stem (StemStr) and its properties
+    ( % Regular verb stem
+      verb_stem_type(_, Imperfective, Perfective, Hypothetical, Class, transitive),
+      ( StemStr = Imperfective, StemType = imperfective, StemStructure = StemStr
+      ; StemStr = Perfective, StemType = perfective, StemStructure = StemStr
+      ; StemStr = Hypothetical, StemType = hypothetical, StemStructure = StemStr
+      )
+    ; % Compound stem (matrix stem is always imperfective)
+      compound_stem(StemStr, StemStructure, Class, transitive),
+      StemType = imperfective
+    ),
+    
+    % 6. Build predicate structure (incorporating Dir prefix)
+    ( DirectionalPrefix = no_directional_prefix ->
+      Predicate = predicate([ValenceType, StemStructure], TenseStr)
+    ;
+      Predicate = predicate([DirectionalPrefix, ValenceType, StemStructure], TenseStr)
+    ),
+    
+    % 7. Check valid combinations
+    Nums = [Num1, Num2],
+    valid_combo(Pers1Type, StemType, TenseStr, Num1, Num2, ClassList),
+    member(Class, ClassList).
+
+% Helper to get person prefix string
+pers_prefix(pers_ni, PersPrefix) :- pers_ni(PersPrefix).
+pers_prefix(pers_zero, PersPrefix) :- pers_zero(PersPrefix).
+pers_prefix(pers_ti, PersPrefix) :- pers_ti(PersPrefix).
+pers_prefix(pers_an, PersPrefix) :- pers_an(PersPrefix).
+pers_prefix(pers_xi, PersPrefix) :- pers_xi(PersPrefix).
+
+% Helper to convert nums to string
+nums_string([Num1, Num2], NumsStr) :-
+    atom_concat(Num1, Num2, NumsStr).
+
+% Valence type definition - now returns the string representation
+valence_type(VA, VAStr) :-
+    va(VAStr),
+    VA = va(VAStr).
+valence_type(Dyadic, DyadicStr) :-
+    dyadic_valence(Dyadic, DyadicStr).
+
 % ============================================================================
-% MAIN PARSE PREDICATE
+% VALENCE MARKERS
 % ============================================================================
 
-parse(Word, Parse) :-
-    (   parse_particle(Word, Parse)
-    ;   parse_dyadic(Word, Parse)
-    ;   parse_monadic(Word, Parse)
-    ;   parse_intransitive(Word, Parse)
+va('ne').
+va('tē').
+va('tla').
+
+% Dyadic valence position 1 (va1)
+va1('c').
+va1('qu').
+va1('qui').
+va1('am').
+
+% Reflexive va1
+va1('n').
+va1('m').
+va1('t').
+
+% Dyadic valence position 2 (va2) - depends on va1
+% Third person va1 ('c', 'qu', 'qui')
+va2('').
+va2(Im) :- im(Im).
+
+% Non-third person va1
+va2(Itz) :- itz(Itz).
+va2(Ech) :- ech(Ech).
+
+% Reflexive va2
+va2('o').
+
+% Valence assimilations
+im('im').
+im('in').
+im('iz').
+im('ix').
+
+itz('itz').
+itz('ich').
+itz('it').
+itz('i').
+itz('iz').
+itz('ix').
+
+ech('ēch').
+ech('et').
+ech('ez').
+ech('ex').
+
+% Dyadic valence definition - includes both VA1 and its corresponding VA2
+% Third person va1 ('c', 'qu', 'qui') - combines with empty or 'im' assimilations
+dyadic_valence([VA1, VA2], DyadicStr) :-
+    member(VA1, ['c', 'qu', 'qui']),
+    (VA2 = '' ; im(VA2)),
+    atom_concat(VA1, VA2, DyadicStr).
+
+% Non-third person va1 ('am') - combines with 'itz' or 'ech' assimilations
+dyadic_valence([VA1, VA2], DyadicStr) :-
+    VA1 = 'am',
+    (itz(VA2) ; ech(VA2)),
+    atom_concat(VA1, VA2, DyadicStr).
+
+% Reflexive combinations - any reflexive va1 with va2 'o' or none
+dyadic_valence([VA1, VA2], DyadicStr) :-
+    member(VA1, ['n', 'm', 't']),
+    (VA2 = '' ; VA2 = 'o'),
+    atom_concat(VA1, VA2, DyadicStr).
+
+% Compound stem definition - parses the string and returns structure
+compound_stem(StemStr, StemStructure, Class, Transitivity) :-
+    ( future_embed(StemStr, StemStructure, Class, Transitivity)
+    %; shared_object(StemStr, StemStructure, Class, Transitivity)  % TODO
+    %; recursive(StemStr, StemStructure, Class, Transitivity)      % TODO
     ).
 
+% Future embed definition
+% Parses: embed_stem + [Optional passive_marker] + 'z' + matrix_stem
+% Clause 1: Passive Marker is PRESENT
+future_embed(StemStr, future_embed(EmbedStem, PassiveMarkerStr, 'z', MatrixStem), Class, Transitivity) :-
+    % Parse embed stem (hypothetical form of any verb)
+    verb_stem_type(_, _, _, EmbedStem, Class, Transitivity),
+    atom_concat(EmbedStem, Rest1, StemStr),
+    
+    % Passive Marker is PRESENT
+    passive_marker(PassiveMarkerStr),
+    atom_concat(PassiveMarkerStr, Rest2, Rest1),
+    
+    % Parse 'z'
+    atom_concat('z', Rest3, Rest2),
+    
+    % Parse matrix stem (must be 'nequi' or 'qui')
+    matrix_stem(MatrixStem),
+    Rest3 = MatrixStem.
+
+% Clause 2: Passive Marker is ABSENT (omitted from the term structure)
+future_embed(StemStr, future_embed(EmbedStem, 'z', MatrixStem), Class, Transitivity) :-
+    % Parse embed stem (hypothetical form of any verb)
+    verb_stem_type(_, _, _, EmbedStem, Class, Transitivity),
+    atom_concat(EmbedStem, Rest1, StemStr),
+    
+    % Passive Marker is ABSENT: Rest1 = 'z' + MatrixStem
+    
+    % Parse 'z'
+    atom_concat('z', Rest3, Rest1),
+    
+    % Parse matrix stem (must be 'nequi' or 'qui')
+    matrix_stem(MatrixStem),
+    Rest3 = MatrixStem.
+
+% Matrix stems for future embed
+matrix_stem('nequi').
+matrix_stem('qui').
 
 % ============================================================================
 % MACRONIZATION
@@ -561,21 +735,5 @@ find_macronizations(PlainWord, MacronizedWords) :-
             AllWords),
     sort(AllWords, MacronizedWords).
 
-% ============================================================================
-% EXAMPLE QUERIES
-% ============================================================================
-% ?- parse(nitemo, P).
-% ?- parse(nihcuiloa, P).  
-% ?- parse(nitemoc, P).
-% ?- parse(nihcuiloh, P).
-% ?- findall(P, parse(nitemo, P), Parses).
-% Find all valid macronizations with their parses
-%?- find_valid_macronizations(nitemo, Results).
-
-% Find just the macronized words
-%?- find_macronizations(nitemo, Words).
-
-% If you want to see the parses nicely:
-%?- find_valid_macronizations(nitemo, Results),
-%   member(Word-Parse, Results),
-%   format('~w: ~w~n', [Word, Parse]).
+% Stub for NNC
+nnc(_, _) :- fail.  % To be implemented later
