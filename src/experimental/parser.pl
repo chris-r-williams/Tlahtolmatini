@@ -68,14 +68,18 @@ parse_particle(Word, Parse) :-
 % ============================================================================
 % verb_stem(Verb, ImperfectiveStem, PerfectiveStem, HypotheticalStem, Class)
 
-verb_stem(temo, 'temō', 'temōc', 'temō', a2).
-verb_stem(ihcuiloa, 'ihcuiloā', 'ihcuiloh', 'ihcuilō', c).
-verb_stem(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b).
-verb_stem(chihua, 'chīhua', 'chīhuac', 'chīhuā', b).
-verb_stem(tlazohtla, 'tlazohtlā', 'tlazohtlac', 'tlazohtlā', b).
-verb_stem(zoma, 'zōmā', 'zōmah', 'zōmā', b).
-verb_stem(choloa, 'choloā', 'choloh', 'cholō', c).
-verb_stem(pano, 'panō', 'panōc', 'panō', b).
+verb_stem(temo, 'temō', 'temōc', 'temō', a2, intransitive).
+verb_stem(ihcuiloa, 'ihcuiloā', 'ihcuiloh', 'ihcuilō', c, transitive).
+verb_stem(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, transitive).
+verb_stem(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, intransitive).
+verb_stem(chihua, 'chīhua', 'chīhuac', 'chīhuā', b, transitive).
+verb_stem(tlazohtla, 'tlazohtlā', 'tlazohtlac', 'tlazohtlā', b, transitive).
+verb_stem(zoma, 'zōmā', 'zōmah', 'zōmā', b, transitive).
+verb_stem(choloa, 'choloā', 'choloh', 'cholō', c, intransitive).
+verb_stem(pano, 'panō', 'panōc', 'panō', b, intransitive).
+verb_stem(nequi, 'nequi', 'nec', 'nequi', b, transitive).
+verb_stem(qui, 'qui', 'quic', 'qui', b, transitive).
+verb_stem(cochi, 'cochi', 'cochic', 'cochi', a1, intransitive).
 
 % ============================================================================
 % PERSON MARKERS
@@ -353,6 +357,23 @@ valid_combo(pers_zero, append(perfective, 'hua'), 'h', 't', plural_suffix_in, [a
 */
 
 % ============================================================================
+% COMPOUND VERB STEMS
+% ============================================================================
+
+% Definition of compound verb stems
+compound_verb_stem(future_embed_compound(HypotheticalStem, PassiveMarker, MatrixStem), Class, TransitivityType) :-
+    verb_stem(_, _, _, HypotheticalStem, _, TransitivityType), % Get hypothetical stem
+    (PassiveMarker = '' ; PassiveMarker = 'lō' ; PassiveMarker = 'ō'),
+    (MatrixStem = 'nequi' ; MatrixStem = 'qui'),
+    Class = b. % Both nequi and qui are class b
+
+% Stub for shared object compound - to be implemented
+compound_verb_stem(shared_object_compound(_), _, _) :- false.
+
+% Stub for recursive compound - to be implemented
+compound_verb_stem(recursive_compound(_), _, _) :- false.
+
+% ============================================================================
 % STEM SHORTENING
 % ============================================================================
 
@@ -390,10 +411,9 @@ get_pers_value(PersType, StemAtom, PersValue) :-
 
 % Intransitive VNC: pers1+[dir](STEM)tns+num1-num2
 parse_intransitive(Word, Parse) :-
-    verb_stem(Verb, ImpStem, PerfStem, HypStem, Class),
     valid_combo(PersType, StemType, Tns, Num1, Num2, Classes),
+    get_final_stem(StemType, _, _, _, Verb, Class, Stem, intransitive),  % Must be intransitive
     member(Class, Classes),
-    select_stem(StemType, ImpStem, PerfStem, HypStem, Stem),
     get_pers_value(PersType, Stem, Pers1),
     (Dir1 = '' ; dir(Dir1)),
     atom_concat(Tns, Num1, Rest1),
@@ -409,10 +429,9 @@ parse_intransitive(Word, Parse) :-
 
 % Monadic Transitive VNC: pers1+[dir]+va1+[dir](STEM)tns+num1-num2
 parse_monadic(Word, Parse) :-
-    verb_stem(Verb, ImpStem, PerfStem, HypStem, Class),
     valid_combo(PersType, StemType, Tns, Num1, Num2, Classes),
+    get_final_stem(StemType, _, _, _, Verb, Class, Stem, transitive),  % Must be transitive
     member(Class, Classes),
-    select_stem(StemType, ImpStem, PerfStem, HypStem, Stem),
     get_pers_value(PersType, Stem, Pers1),
     (Dir1 = '' ; dir(Dir1)),
     va1_monadic(Va1),
@@ -433,10 +452,9 @@ parse_monadic(Word, Parse) :-
 
 % Dyadic Transitive VNC: pers1+[dir]+va1-va2+[dir](STEM)tns+num1-num2
 parse_dyadic(Word, Parse) :-
-    verb_stem(Verb, ImpStem, PerfStem, HypStem, Class),
     valid_combo(PersType, StemType, Tns, Num1, Num2, Classes),
+    get_final_stem(StemType, _, _, _, Verb, Class, Stem, transitive),  % Must be transitive
     member(Class, Classes),
-    select_stem(StemType, ImpStem, PerfStem, HypStem, Stem),
     get_pers_value(PersType, Stem, Pers1),
     (Dir1 = '' ; dir(Dir1)),
     va1_dyadic(Va1),
@@ -461,6 +479,28 @@ parse_dyadic(Word, Parse) :-
 select_stem(imperfective, ImpStem, _, _, ImpStem).
 select_stem(perfective, _, PerfStem, _, PerfStem).
 select_stem(hypothetical, _, _, HypStem, HypStem).
+
+% Helper to build future embed compound stem
+build_future_embed_compound(HypStem, PassiveMark, MatrixStem, CompoundStem) :-
+    (PassiveMark = '' ; PassiveMark = 'lō' ; PassiveMark = 'ō'),
+    atom_concat(PassiveMark, 'z', Temp1),
+    atom_concat(HypStem, Temp1, Temp2),
+    atom_concat(Temp2, MatrixStem, CompoundStem).
+
+% Helper to get final stem (either regular or compound)
+get_final_stem(StemType, ImpStem, PerfStem, HypStem, Verb, Class, FinalStem, TransitivityType) :-
+    (   % Regular verb stem
+        verb_stem(Verb, ImpStem, PerfStem, HypStem, Class, TransitivityType),
+        select_stem(StemType, ImpStem, PerfStem, HypStem, FinalStem)
+    ;   % Future embed compound
+        StemType = imperfective,  % Matrix verb must be in imperfective
+        verb_stem(_, MatrixStem, _, _, b, transitive),  % Matrix verb details
+        (MatrixStem = 'nequi' ; MatrixStem = 'qui'),
+        verb_stem(Verb, _, _, HypStem, _, TransitivityType),  % Embed verb details
+        (PassiveMark = '' ; PassiveMark = 'lō' ; PassiveMark = 'ō'),
+        build_future_embed_compound(HypStem, PassiveMark, MatrixStem, FinalStem),
+        Class = b  % Both nequi and qui are class b
+    ).
 
 % ============================================================================
 % MAIN PARSE PREDICATE
