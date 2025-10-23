@@ -80,6 +80,12 @@ test_transitive_directionality_to_there :-
     write('Intransitive directionality "to there". Parsings for nihuālmonequi: '), nl,
     write_parses(Parses).
 
+% 8.1.2
+test_antecessive_order_prefix :- 
+    findall(P, parse(ōniquihcuilōlōznequi, P), Parses),
+    write('Antecessive order prefix. Parsings for ōniquihcuilōlōznequi: '), nl,
+    write_parses(Parses).
+
 % 28.11
 test_intransitive_future_embed_compound :- 
     findall(P, parse(nicochiznequiya, P), Parses),
@@ -149,4 +155,5 @@ run_tests :-
     test_intransitive_future_embed_compound,
     test_transitive_future_embed_compound,
     test_passive_future_embed_compound,
+    test_antecessive_order_prefix,
     write('All tests completed.'), nl.

@@ -105,6 +105,8 @@ particle('zā').
 particle('zan').
 particle('zo').
 
+antecessive_order_prefix('ō').
+
 % ============================================================================
 % NUCLEAR CLAUSE
 % ============================================================================
@@ -118,6 +120,10 @@ nuclear_clause(Vocable, Parse) :-
 % An expanded VNC can have a negativizing prefix or not
 expanded_vnc(Vocable, [negativizing_prefix, VNC]) :-
     negativizing_prefix(Prefix),
+    atom_concat(Prefix, Rest, Vocable),
+    vnc(Rest, VNC).
+expanded_vnc(Vocable, [antecessive_order_prefix, VNC]) :-
+    antecessive_order_prefix(Prefix),
     atom_concat(Prefix, Rest, Vocable),
     vnc(Rest, VNC).
 expanded_vnc(Vocable, Parse) :-
