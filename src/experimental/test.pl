@@ -1,6 +1,6 @@
-:- encoding(utf8).
+%:- encoding(utf8).
 
-:- [parser].
+%:- [parser].
 
 % 3.1, 3.2
 test_particle :- 
@@ -80,10 +80,10 @@ test_transitive_directionality_to_there :-
     write('Intransitive directionality "to there". Parsings for nihuālmonequi: '), nl,
     write_parses(Parses).
 
-% 8.1.2
-test_antecessive_order_prefix :- 
-    findall(P, parse(ōniquihcuilōlōznequi, P), Parses),
-    write('Antecessive order prefix. Parsings for ōniquihcuilōlōznequi: '), nl,
+% 8.1.3
+test_vnc_with_antecessive_and_negativizing_particles :- 
+    findall(P, parse(ahōnamēchtlazohtla, P), Parses),
+    write('VNC 1 (dyadic valence). Parsings for ahōnamēchtlazohtla: '), nl,
     write_parses(Parses).
 
 % 28.11
@@ -155,5 +155,5 @@ run_tests :-
     test_intransitive_future_embed_compound,
     test_transitive_future_embed_compound,
     test_passive_future_embed_compound,
-    test_antecessive_order_prefix,
+    test_vnc_with_antecessive_and_negativizing_particles,
     write('All tests completed.'), nl.

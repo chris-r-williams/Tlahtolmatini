@@ -1,5 +1,28 @@
 :- encoding(utf8).
 
+% This Prolog program is part of Tlahtolmatini, a morphological analyzer for Nahuatl
+% which is distributed under the MIT License.
+
+% Copyright (c) 2025-present Chris Ryan Williams
+
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the "Software"), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+
+% The above copyright notice and this permission notice shall be included in all
+% copies or substantial portions of the Software.
+
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+% SOFTWARE.
+
 % Based on Andrews' Introduction to Classical Nahuatl
 
 % ============================================================================
@@ -118,6 +141,12 @@ nuclear_clause(Vocable, Parse) :-
     ).
 
 % An expanded VNC can have a negativizing prefix or not
+expanded_vnc(Vocable, [negativizing_prefix, antecessive_order_prefix, VNC]) :-
+    negativizing_prefix(Prefix1),
+    antecessive_order_prefix(Prefix2),
+    atom_concat(Prefix1, Prefix2, Prefix),
+    atom_concat(Prefix, Rest, Vocable),
+    vnc(Rest, VNC).
 expanded_vnc(Vocable, [negativizing_prefix, VNC]) :-
     negativizing_prefix(Prefix),
     atom_concat(Prefix, Rest, Vocable),
@@ -152,6 +181,8 @@ verb_stem_type(pano, 'panō', 'panōc', 'panō', b, intransitive).
 verb_stem_type(nequi, 'nequi', 'nec', 'nequi', b, transitive).
 verb_stem_type(qui, 'qui', 'quic', 'qui', b, transitive).
 verb_stem_type(cochi, 'cochi', 'cochic', 'cochi', a1, intransitive).
+verb_stem_type(cuica, 'cuīca', 'cuīcac', 'cuīca', b, intransitive).
+verb_stem_type(cua, 'cuā', 'cuah', 'cuā', b, transitive).
 
 % ============================================================================
 % TENSE MARKERS
@@ -639,8 +670,14 @@ dyadic_valence([VA1, VA2], DyadicStr) :-
 
 % Non-third person va1 ('am') - combines with 'itz' or 'ech' assimilations
 dyadic_valence([VA1, VA2], DyadicStr) :-
-    VA1 = 'am',
-    (itz(VA2) ; ech(VA2)),
+    member(VA1, ['n', 't', 'am']),
+    ech(VA2),
+    atom_concat(VA1, VA2, DyadicStr).
+
+% Non-third person va1 ('am') - combines with 'itz' or 'ech' assimilations
+dyadic_valence([VA1, VA2], DyadicStr) :-
+    VA1 = 'm',
+    itz(VA2),
     atom_concat(VA1, VA2, DyadicStr).
 
 % Reflexive combinations - any reflexive va1 with va2 'o' or none
