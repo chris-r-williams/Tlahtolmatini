@@ -524,10 +524,7 @@ absolutive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
     nums_string(Nums, NumsStr),
     atom_concat(StemStr, NumsStr, Rest1), % Rest1 = StemStr + NumsStr
     
-    % 3. Check valid combinations
-    valid_nnc_combo(Pers1Type, Num1, Num2),
-    
-    % 4. Identify Stem (StemStr) and its properties
+    % 3. Identify Stem (StemStr) and its properties
     ( % Regular noun stem
     noun_stem_type(PlainStem, Class, AffinityStem, DistributiveVarietalStem, Animacy),
     % If singular (num2 not in ['h', 'eh'])
@@ -555,8 +552,18 @@ absolutive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
     )
     ; % Compound stem
         compound_nnc_stem(StemStr, StemStructure, Class, Animacy),
-        Num1 = Class
+        ( \+ member(Num2, ['h', 'eh']) ->
+            % Singular compound: Num1 should be the class marker
+            Num1 = Class
+        ;
+            % Plural compound: Num1 is a plural marker, not the class
+            Animacy = animate
+            % Don't constrain Num1 to equal Class for plurals
+        )
     ),
+
+    % 4. Check valid combinations
+    valid_nnc_combo(Pers1Type, Num1, Num2),
     
     % 5. Build predicate structure
     Predicate = predicate(StemStructure).
