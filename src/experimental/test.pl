@@ -34,8 +34,8 @@ test_vnc_transitive_monadic :-
 
 % 6.3
 test_vnc_transitive_dyadic :- 
-    findall(P, parse(namēchtlazohtla, P), Parses),
-    write('VNC 1 (dyadic valence). Parsings for namēchtlazohtla: '), nl,
+    findall(P, parse(nimitztlazohtla, P), Parses),
+    write('VNC 1 (dyadic valence). Parsings for nimitztlazohtla: '), nl,
     write_parses(Parses).
 
 % TODO
@@ -84,6 +84,42 @@ test_transitive_directionality_to_there :-
 test_vnc_with_antecessive_and_negativizing_particles :- 
     findall(P, parse(ahōnamēchtlazohtla, P), Parses),
     write('VNC 1 (dyadic valence). Parsings for ahōnamēchtlazohtla: '), nl,
+    write_parses(Parses).
+
+% 14.2
+test_absolutive_stem_nnc_in :-
+    findall(P, parse(michin, P), Parses),
+    write('Absolutive stem NNC. Parsings for michin: '), nl,
+    write_parses(Parses).
+
+% 14.2
+test_absolutive_stem_nnc_zero :-
+    findall(P, parse(chichi, P), Parses),
+    write('Absolutive stem NNC. Parsings for chichi: '), nl,
+    write_parses(Parses).
+
+% 14.3.1
+test_absolutive_stem_nnc_affinity_singular :-
+    findall(P, parse(cācalli, P), Parses),
+    write('Absolutive stem NNC, affinity singular. Parsings for cācalli: '), nl,
+    write_parses(Parses).
+
+% 14.3.2
+test_absolutive_stem_nnc_distributive_singular :-
+    findall(P, parse(cahcalli, P), Parses),
+    write('Absolutive stem NNC, distributive singular. Parsings for cahcalli: '), nl,
+    write_parses(Parses).
+
+% 14.4
+test_absolutive_stem_nnc_with_singular_subject:-
+    findall(P, parse(ticihuātl, P), Parses),
+    write('Absolutive stem NNC, singular subject. Parsings for ticihuātl: '), nl,
+    write_parses(Parses).
+
+% 14.5
+test_absolutive_stem_nnc_with_plural_subject:-
+    findall(P, parse(titlācah, P), Parses),
+    write('Absolutive stem NNC, plural subject. Parsings for titlācah: '), nl,
     write_parses(Parses).
 
 % 28.11
@@ -140,20 +176,26 @@ run_tests :-
     test_particle,
     test_particle_with_prefix,
     test_particle_with_suffix,
+    test_vnc_intransitive,
+    test_vnc_transitive_monadic,
     test_vnc_transitive_dyadic,
     test_vnc_with_negativizing_particle,
     test_vnc_transitive_dyadic_with_variation,
-    test_vnc_transitive_monadic,
-    test_vnc_intransitive,
     test_vnc_intransitive_reflexive,
-    test_stem_long_final_vowel_shortened,
-    test_stem_long_final_vowel_unshortened,
     test_intransitive_directionality_to_here,
     test_intransitive_directionality_to_there,
     test_transitive_directionality_to_here,
     test_transitive_directionality_to_there,
+    test_vnc_with_antecessive_and_negativizing_particles,
+    test_absolutive_stem_nnc_in,
+    test_absolutive_stem_nnc_zero,
+    test_absolutive_stem_nnc_affinity_singular,
+    test_absolutive_stem_nnc_distributive_singular,
+    test_absolutive_stem_nnc_with_singular_subject,
+    test_absolutive_stem_nnc_with_plural_subject,
     test_intransitive_future_embed_compound,
     test_transitive_future_embed_compound,
     test_passive_future_embed_compound,
-    test_vnc_with_antecessive_and_negativizing_particles,
+    test_stem_long_final_vowel_shortened,
+    test_stem_long_final_vowel_unshortened,
     write('All tests completed.'), nl.

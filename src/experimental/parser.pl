@@ -101,7 +101,7 @@ particle('zo').
 % A nuclear clause can be an expanded VNC or an NNC (not yet implemented)
 nuclear_clause(Vocable, Parse) :-
     ( expanded_vnc(Vocable, Parse)
-    ; nnc(Vocable, Parse)  % Stub for now
+    ; expanded_nnc(Vocable, Parse)  % Stub for now
     ).
 
 % ============================================================================
@@ -492,8 +492,145 @@ ech('ex').
 % NOMINAL NUCLEAR CLAUSES (NNCs)
 % ============================================================================
 
-% Stub for NNC
-nnc(_, _) :- fail.  % To be implemented later
+% An expanded NNC can take the antecessive order prefix from the VNC that it supplements
+expanded_nnc(Vocable, [antecessive_order_prefix, NNC]) :-
+    antecessive_order_prefix(Prefix),
+    atom_concat(Prefix, Rest, Vocable),
+    nnc(Rest, NNC).
+expanded_nnc(Vocable, Parse) :-
+    nnc(Vocable, Parse).
+
+% An NNC can be either absolutive state or possessive state
+nnc(Vocable, Parse) :-
+    ( absolutive_state_nnc(Vocable, Parse)
+    %; possessive_state_nnc(Vocable, Parse)
+    ).
+
+% Absolutive state NNC definition
+% The formula for an absolutive state NNC is: Subject + Predicate
+% where the subject is: Pers + ... + Num1 + Num2
+% and the predicate is: Stem
+% e.g. ancemihtimeh - we were sleeping
+% pers(an) + (stem(cem-ihti) + num1(m) + num2(eh)
+absolutive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
+    % 1. Parse person prefix (Pers)
+    pers1(Pers1Type),
+    pers_prefix(Pers1Type, PersPrefix),
+    atom_concat(PersPrefix, Rest1, Vocable),
+    
+    % 2. Parse Numbers (Num1 + Num2) from the end of Rest1
+    nnc_nums(Nums),
+    Nums = [Num1, Num2],
+    nums_string(Nums, NumsStr),
+    atom_concat(StemStr, NumsStr, Rest1), % Rest1 = StemStr + NumsStr
+    
+    % 3. Check valid combinations
+    valid_nnc_combo(Pers1Type, Num1, Num2),
+    
+    % 4. Identify Stem (StemStr) and its properties
+    ( % Regular noun stem
+    noun_stem_type(PlainStem, Class, AffinityStem, DistributiveVarietalStem, Animacy),
+    % If singular (num2 not in ['h', 'eh'])
+    ( \+ member(Num2, ['h', 'eh']) ->
+        ( % Plain stem (the default)
+            StemStr = PlainStem,
+            StemStructure = PlainStem,
+            Num1 = Class
+        ; % Affinity stem for inanimate nouns (e.g., cācalli)
+            StemStr = AffinityStem,
+            StemStructure = AffinityStem,
+            Animacy = inanimate,
+            Num1 = Class
+        ; % Distributive/Varietal stem for inanimate nouns (e.g., cahcalli)
+            StemStr = DistributiveVarietalStem,
+            StemStructure = DistributiveVarietalStem,
+            Animacy = inanimate,
+            Num1 = Class
+        )
+    ; % If plural, parsed stem can match any of the three forms
+        ( StemStr = PlainStem, StemStructure = PlainStem, Animacy = animate
+        ; StemStr = AffinityStem, StemStructure = AffinityStem, Animacy = animate
+        ; StemStr = DistributiveVarietalStem, StemStructure = DistributiveVarietalStem, Animacy = animate
+        )
+    )
+    ; % Compound stem
+    compound_nnc_stem
+    ),
+    
+    % 5. Build predicate structure
+    Predicate = predicate(StemStructure).
+
+% Numbers structure
+nnc_nums([Num1, Num2]) :-
+    nnc_num1(Num1),
+    nnc_num2(Num2).
+
+% Valid num1 and num2 values
+nnc_num1('').
+nnc_num1('tl').
+nnc_num1('tli').
+nnc_num1('li').
+nnc_num1('in').
+nnc_num1('t').
+nnc_num1('m').
+
+nnc_num2('').
+nnc_num2('in').
+nnc_num2('eh').
+nnc_num2('h').
+
+% TODO following the model of VNCs, but is this needed?
+%parse_nnc_root(Root, StemStr, directional_prefix(Prefix)) :-
+%    directional_prefix(Prefix),
+%    atom_concat(Prefix, StemStr, Root).
+parse_nnc_root(Root, StemStr) :-
+    StemStr = Root.
+
+compound_nnc_stem:- false.
+
+% In 12.6 Andrews says that inanimate nouns can be used with subject pronouns
+% metaphorically, so I am not implementing all of the NNC paradigms which would
+% put a constraint on which nouns could have subject pronouns 
+valid_nnc_combo(pers_ni, 'tl', '').
+valid_nnc_combo(pers_ni, 'tli', '').
+valid_nnc_combo(pers_ni, 'li', '').
+valid_nnc_combo(pers_ni, 'in', '').
+valid_nnc_combo(pers_ni, '', '').
+valid_nnc_combo(pers_ti, 't', 'in').
+valid_nnc_combo(pers_ti, 'm', 'eh').
+valid_nnc_combo(pers_ti, '', 'h').
+valid_nnc_combo(pers_ti, 'tl', '').
+valid_nnc_combo(pers_ti, 'tli', '').
+valid_nnc_combo(pers_ti, 'li', '').
+valid_nnc_combo(pers_ti, 'in', '').
+valid_nnc_combo(pers_ti, '', '').
+valid_nnc_combo(pers_an, 't', 'in').
+valid_nnc_combo(pers_an, 'm', 'eh').
+valid_nnc_combo(pers_an, '', 'h').
+valid_nnc_combo(pers_zero, 'tl', '').
+valid_nnc_combo(pers_zero, 'tli', '').
+valid_nnc_combo(pers_zero, 'li', '').
+valid_nnc_combo(pers_zero, 'in', '').
+valid_nnc_combo(pers_zero, '', '').
+valid_nnc_combo(pers_zero, 't', 'in').
+valid_nnc_combo(pers_zero, 'm', 'eh').
+valid_nnc_combo(pers_zero, 'h').
+
+% plain stem, class, affinity stem, distributive/varietal stem
+noun_stem_type('ā', 'tl', 'āā', 'ahā', inanimate).
+noun_stem_type('cal', 'li', 'cācal', 'cahcal', inanimate).
+noun_stem_type('chichi', '', 'chīchichi', 'chihchichi', animate).
+noun_stem_type('cihuā', 'tl', 'cīcihuā', 'cihcihuā', animate).
+noun_stem_type('pah', 'tli', 'pāpah', 'pahpah', inanimate).
+noun_stem_type('me', 'tl', 'mēme', 'mehme', inanimate).
+noun_stem_type('mich', 'in', 'mīmich', 'mihmich', animate).
+noun_stem_type('tah', 'tli', 'tātah', 'tahtah', animate).
+noun_stem_type('temol', 'in', 'tētemol', 'tehtemol', animate).
+noun_stem_type('temol', 'li', 'tētemol', 'tehtemol', animate).
+noun_stem_type('te', 'tl', 'tēte', 'tehte', animate). % means rock but Molina gives animate form
+noun_stem_type('tlāca', 'tl', 'tlātlaca', 'tlahtlāca', animate).
+noun_stem_type('tōch', 'in', 'tōtōch', 'tohtōch', animate).
+noun_stem_type('tōch', 'tli', 'tōtōch', 'tohtōch', animate).
 
 % ============================================================================
 % SHARED FACTS
