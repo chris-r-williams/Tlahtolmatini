@@ -140,6 +140,12 @@ test_passive_future_embed_compound :-
     write('Future embed compound. Parsings for niquihcuilōlōznequi: '), nl,
     write_parses(Parses).
 
+% 31.4
+test_nominal_embed_compound :-
+    findall(P, parse(exōtl, P), Parses),
+    write('Future embed compound. Parsings for exōtl: '), nl,
+    write_parses(Parses).
+
 % misc
 test_stem_long_final_vowel_shortened :- 
     findall(P, parse(nitemo, P), Parses),
@@ -198,4 +204,5 @@ run_tests :-
     test_passive_future_embed_compound,
     test_stem_long_final_vowel_shortened,
     test_stem_long_final_vowel_unshortened,
+    test_nominal_embed_compound,
     write('All tests completed.'), nl.

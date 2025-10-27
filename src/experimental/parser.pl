@@ -554,7 +554,8 @@ absolutive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
         )
     )
     ; % Compound stem
-    compound_nnc_stem
+        compound_nnc_stem(StemStr, StemStructure, Class, Animacy),
+        Num1 = Class
     ),
     
     % 5. Build predicate structure
@@ -586,7 +587,28 @@ nnc_num2('h').
 parse_nnc_root(Root, StemStr) :-
     StemStr = Root.
 
-compound_nnc_stem:- false.
+% Compound NNC stem - currently only nominal_embed
+compound_nnc_stem(StemStr, StemStructure, Class, Animacy) :-
+    nominal_embed(StemStr, StemStructure, Class, Animacy).
+
+% Recursive nominal_embed definition
+% Base case: single embed stem + matrix stem
+nominal_embed(StemStr, nominal_embed(EmbedStem, MatrixStem), Class, Animacy) :-
+    % Parse embed stem (plain form only)
+    noun_stem_type(EmbedStem, _, _, _, _),
+    atom_concat(EmbedStem, MatrixStem, StemStr),
+    
+    % Matrix stem determines the class and animacy
+    noun_stem_type(MatrixStem, Class, _, _, Animacy).
+
+% Recursive case: embed stem + (rest of the compound)
+nominal_embed(StemStr, nominal_embed(EmbedStem, RestStructure), Class, Animacy) :-
+    % Parse first embed stem (plain form only)
+    noun_stem_type(EmbedStem, _, _, _, _),
+    atom_concat(EmbedStem, Rest, StemStr),
+    
+    % Recursively parse the rest (which itself is a nominal_embed)
+    nominal_embed(Rest, RestStructure, Class, Animacy).
 
 % In 12.6 Andrews says that inanimate nouns can be used with subject pronouns
 % metaphorically, so I am not implementing all of the NNC paradigms which would
@@ -621,6 +643,7 @@ noun_stem_type('ā', 'tl', 'āā', 'ahā', inanimate).
 noun_stem_type('cal', 'li', 'cācal', 'cahcal', inanimate).
 noun_stem_type('chichi', '', 'chīchichi', 'chihchichi', animate).
 noun_stem_type('cihuā', 'tl', 'cīcihuā', 'cihcihuā', animate).
+noun_stem_type('e', 'tl', 'ēe', 'ehe', inanimate).
 noun_stem_type('pah', 'tli', 'pāpah', 'pahpah', inanimate).
 noun_stem_type('me', 'tl', 'mēme', 'mehme', inanimate).
 noun_stem_type('mich', 'in', 'mīmich', 'mihmich', animate).
@@ -631,6 +654,7 @@ noun_stem_type('te', 'tl', 'tēte', 'tehte', animate). % means rock but Molina g
 noun_stem_type('tlāca', 'tl', 'tlātlaca', 'tlahtlāca', animate).
 noun_stem_type('tōch', 'in', 'tōtōch', 'tohtōch', animate).
 noun_stem_type('tōch', 'tli', 'tōtōch', 'tohtōch', animate).
+noun_stem_type('xō', 'tl', 'xōxō', 'xohxō', inanimate).
 
 % ============================================================================
 % SHARED FACTS
