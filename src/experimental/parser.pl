@@ -503,7 +503,7 @@ expanded_nnc(Vocable, Parse) :-
 % An NNC can be either absolutive state or possessive state
 nnc(Vocable, Parse) :-
     ( absolutive_state_nnc(Vocable, Parse)
-    %; possessive_state_nnc(Vocable, Parse)
+    ; possessive_state_nnc(Vocable, Parse)
     ).
 
 % Absolutive state NNC definition
@@ -568,6 +568,73 @@ absolutive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
     % 5. Build predicate structure
     Predicate = predicate(StemStructure).
 
+% Possessive state NNC definition
+% The formula for a possessive state NNC is: Subject + Predicate
+% where the subject is: Pers + ... + Num1 + Num2
+% and the predicate is: State + Stem
+% with the state being embedded as: Pers + State + Stem + Num1 + Num2
+possessive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
+    % 1. Parse person prefix (Pers)
+    pers1(Pers1Type),
+    pers_prefix(Pers1Type, PersPrefix),
+    atom_concat(PersPrefix, Rest1, Vocable),
+    
+    % 2. Parse State (StateType)
+    % Rest1 = State + StemWithNums
+    parse_state_and_stem(Rest1, StateType, StateStr, StemWithNums),
+    
+    % 3. Parse Numbers (Num1 + Num2) from the end of StemWithNums
+    nnc_nums(Nums),
+    Nums = [Num1, Num2],
+    nums_string(Nums, NumsStr),
+    atom_concat(StemStr, NumsStr, StemWithNums), % StemWithNums = StemStr + NumsStr
+    
+    % 4. Identify Stem (StemStr) and its properties
+    ( % Regular noun stem
+    noun_stem_type(PlainStem, Class, AffinityStem, DistributiveVarietalStem, Animacy),
+    % If singular (num2 not in ['h', 'eh'])
+    ( \+ member(Num2, ['h', 'eh']) ->
+        ( % Plain stem (the default)
+            StemStr = PlainStem,
+            StemStructure = PlainStem
+        ; % Distributive/Varietal stem for inanimate nouns (e.g., cahcalli)
+            StemStr = DistributiveVarietalStem,
+            StemStructure = DistributiveVarietalStem,
+            Animacy = inanimate
+        ; % Affinity stem for inanimate nouns (e.g., cācalli)
+            StemStr = AffinityStem,
+            StemStructure = AffinityStem,
+            Animacy = inanimate
+        )
+    ; % If plural, parsed stem can match any of the three forms
+        ( StemStr = PlainStem, StemStructure = PlainStem, Animacy = animate
+        ; StemStr = AffinityStem, StemStructure = AffinityStem, Animacy = animate
+        ; StemStr = DistributiveVarietalStem, StemStructure = DistributiveVarietalStem, Animacy = animate
+        )
+    )
+    ; % Compound stem
+        compound_nnc_stem(StemStr, StemStructure, Class, Animacy),
+        ( \+ member(Num2, ['h', 'eh']) ->
+            % Singular compound: Num1 should be the class marker
+            Num1 = Class
+        ;
+            % Plural compound: Num1 is a plural marker, not the class
+            Animacy = animate
+            % Don't constrain Num1 to equal Class for plurals
+        )
+    ),
+
+    % 5. Check valid combinations
+    valid_possessive_nnc_combo(Pers1Type, Num1, Num2),
+    
+    % 6. Build predicate structure (incorporating State)
+    Predicate = predicate([StateType, StemStructure]).
+
+% Helper predicate to parse state and isolate stem
+parse_state_and_stem(Rest1, StateType, StateStr, Stem) :-
+    state_type(StateType, StateStr),
+    atom_concat(StateStr, Stem, Rest1).
+
 % Numbers structure
 nnc_nums([Num1, Num2]) :-
     nnc_num1(Num1),
@@ -581,11 +648,15 @@ nnc_num1('li').
 nnc_num1('in').
 nnc_num1('t').
 nnc_num1('m').
+nnc_num1('uh').
+nnc_num1('hui').
+nnc_num1('hu').
 
 nnc_num2('').
 nnc_num2('in').
 nnc_num2('eh').
 nnc_num2('h').
+nnc_num2('an').
 
 % TODO following the model of VNCs, but is this needed?
 %parse_nnc_root(Root, StemStr, directional_prefix(Prefix)) :-
@@ -617,6 +688,40 @@ nominal_embed(StemStr, nominal_embed(EmbedStem, RestStructure), Class, Animacy) 
     % Recursively parse the rest (which itself is a nominal_embed)
     nominal_embed(Rest, RestStructure, Class, Animacy).
 
+% State type definition - now returns the string representation
+state_type(ST, STStr) :-
+    st(STStr),
+    ST = st(STStr).
+state_type(Dyadic, DyadicStr) :-
+    dyadic_state(Dyadic, DyadicStr).
+
+% Dyadic state definition - includes both ST1 and its corresponding ST2
+% Third person st1 ('ī') - combines with empty or 'm', 'n'
+dyadic_state([ST1, ST2], DyadicStr) :-
+    ST1 = 'ī',
+    member(ST2, ['', 'm', 'n']),
+    atom_concat(ST1, ST2, DyadicStr).
+
+% Reflexive combinations - any reflexive va1 with va2 'o' or none
+dyadic_state([ST1, ST2], DyadicStr) :-
+    member(ST1, ['n', 'm', 't', 'am']),
+    (ST2 = '' ; ST2 = 'o'),
+    atom_concat(ST1, ST2, DyadicStr).
+
+st('ne').
+st('tē').
+st('tla').
+
+st1('ī').
+st1('m').
+st1('am').
+st1('n').
+st1('t').
+
+st2('o').
+st2('m').
+st2('n').
+
 % In 12.6 Andrews says that inanimate nouns can be used with subject pronouns
 % metaphorically, so I am not implementing all of the NNC paradigms which would
 % put a constraint on which nouns could have subject pronouns 
@@ -644,6 +749,19 @@ valid_nnc_combo(pers_zero, '', '').
 valid_nnc_combo(pers_zero, 't', 'in').
 valid_nnc_combo(pers_zero, 'm', 'eh').
 valid_nnc_combo(pers_zero, 'h').
+
+valid_possessive_nnc_combo(pers_ni, 'uh', '').
+valid_possessive_nnc_combo(pers_ni, 'hui', '').
+valid_possessive_nnc_combo(pers_ni, '', '').
+valid_possessive_nnc_combo(pers_ti, 'hu', 'an').
+valid_possessive_nnc_combo(pers_ti, 'uh', '').
+valid_possessive_nnc_combo(pers_ti, 'hui', '').
+valid_possessive_nnc_combo(pers_ti, '', '').
+valid_possessive_nnc_combo(pers_an, 'hu', 'an').
+valid_possessive_nnc_combo(pers_zero, 'uh', '').
+valid_possessive_nnc_combo(pers_zero, 'hui', '').
+valid_possessive_nnc_combo(pers_zero, '', '').
+valid_possessive_nnc_combo(pers_zero, 'hu', 'an').
 
 % plain stem, class, affinity stem, distributive/varietal stem
 noun_stem_type('ā', 'tl', 'āā', 'ahā', inanimate).

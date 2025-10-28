@@ -122,6 +122,18 @@ test_absolutive_stem_nnc_with_plural_subject:-
     write('Absolutive stem NNC, plural subject. Parsings for titlācah: '), nl,
     write_parses(Parses).
 
+% 14.6
+test_plural_possessive_state_nnc :-
+    findall(P, parse(tīcihuāhuan, P), Parses),
+    write('Possessive state NNC. Parsings for tīcihuāhuan: '), nl,
+    write_parses(Parses).
+
+% 14.7
+test_singular_possessive_state_nnc :-
+    findall(P, parse(mochichi, P), Parses),
+    write('Possessive state NNC. Parsings for mochichi: '), nl,
+    write_parses(Parses).
+
 % 28.11
 test_intransitive_future_embed_compound :- 
     findall(P, parse(nicochiznequiya, P), Parses),
@@ -205,6 +217,8 @@ run_tests :-
     test_absolutive_stem_nnc_distributive_singular,
     test_absolutive_stem_nnc_with_singular_subject,
     test_absolutive_stem_nnc_with_plural_subject,
+    test_plural_possessive_state_nnc,
+    test_singular_possessive_state_nnc,
     test_intransitive_future_embed_compound,
     test_transitive_future_embed_compound,
     test_passive_future_embed_compound,
