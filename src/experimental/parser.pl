@@ -592,8 +592,8 @@ possessive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
     % 4. Identify Stem (StemStr) and its properties
     ( % Regular noun stem
     noun_stem_type(PlainStem, Class, AffinityStem, DistributiveVarietalStem, Animacy),
-    % If singular (num2 not in ['h', 'eh'])
-    ( \+ member(Num2, ['h', 'eh']) ->
+    % If singular (num1 not 'hu')
+    ( \+ Num1 = 'hu' ->
         ( % Plain stem (the default)
             StemStr = PlainStem,
             StemStructure = PlainStem
@@ -614,13 +614,12 @@ possessive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
     )
     ; % Compound stem
         compound_nnc_stem(StemStr, StemStructure, Class, Animacy),
-        ( \+ member(Num2, ['h', 'eh']) ->
-            % Singular compound: Num1 should be the class marker
-            Num1 = Class
-        ;
-            % Plural compound: Num1 is a plural marker, not the class
+        ( Num1 = 'hu' ->
+            % Plural compound: Animacy must be animate
             Animacy = animate
-            % Don't constrain Num1 to equal Class for plurals
+        ;
+            % Singular compound: no constraints
+            true
         )
     ),
 
