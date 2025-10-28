@@ -1,229 +1,149 @@
-%:- encoding(utf8).
+:- encoding(utf8).
 
-%:- [parser].
+% Load the parser file to be tested
+% Make sure parser.pl is in the same directory or accessible
+:- [parser].
 
-% 3.1, 3.2
-test_particle :- 
-    findall(P, parse(mā, P), Parses),
-    write('Parsings for mā: '), nl,
-    write_parses(Parses).
+% Export a simple predicate to run all tests in this module
+%run_all_tests :-
+%    run_tests(parser_tests).
 
-% 3.3, 3.4
-test_particle_with_prefix :- 
-    findall(P, parse(ahtēl, P), Parses),
-    write('Parsings for ahtēl: '), nl,
-    write_parses(Parses).
+% ============================================================================
+% TEST SUITE
+% ============================================================================
 
-% 3.3, 3.4
-test_particle_with_suffix :- 
-    findall(P, parse(tēltzin, P), Parses),
-    write('Parsings for tēltzin: '), nl,
-    write_parses(Parses).
+:- begin_tests(parser_tests).
 
-% 5
-test_vnc_intransitive :- 
-    findall(P, parse(tichicāhuaz, P), Parses),
-    write('VNC 3 (vacant valence). Parsings for tichicāhuaz: '), nl,
-    write_parses(Parses).
+% Helper predicate for positive tests: fails if no parse is found.
+must_parse(Word) :-
+    once(parse(Word, _Parse)).
 
-% 6.2
-test_vnc_transitive_monadic :- 
-    findall(P, parse(tlachīhuah, P), Parses),
-    write('VNC 2 (monadic valence). Parsings for tlachīhuah: '), nl,
-    write_parses(Parses).
+% Helper predicate for negative tests: fails if any parse is found.
+must_not_parse(Word) :-
+    \+ parse(Word, _Parse).
 
-% 6.3
-test_vnc_transitive_dyadic :- 
-    findall(P, parse(nimitztlazohtla, P), Parses),
-    write('VNC 1 (dyadic valence). Parsings for nimitztlazohtla: '), nl,
-    write_parses(Parses).
+% 3.1, 3.2: Particles
+test(particle) :-
+    must_parse('mā').
 
-% TODO
-test_vnc_with_negativizing_particle :- 
-    findall(P, parse(ahnamēchtlazohtla, P), Parses),
-    write('VNC 1 (dyadic valence). Parsings for ahnamēchtlazohtla: '), nl,
-    write_parses(Parses).
+% 3.3, 3.4: Particle with prefix
+test(particle_with_prefix) :-
+    must_parse('ahtēl').
 
-% 6.3
-test_vnc_transitive_dyadic_with_variation :- 
-    findall(P, parse(namextlazohtla, P), Parses),
-    write('VNC 1 (dyadic valence). Parsings for namextlazohtla: '), nl,
-    write_parses(Parses).
+% 3.3, 3.4: Particle with suffix
+test(particle_with_suffix) :-
+    must_parse('tēltzin').
 
-% 6.6
-test_vnc_intransitive_reflexive :- 
-    findall(P, parse(mozōmāz, P), Parses),
-    write('VNC 1 (reflexive). Parsings for mozōmāz: '), nl,
-    write_parses(Parses).
+% 5: VNC Intransitive
+test(vnc_intransitive) :-
+    must_parse('tichicāhuaz').
 
-% 8.1.1
-test_intransitive_directionality_to_here :- 
-    findall(P, parse(huālcholoa, P), Parses),
-    write('Intransitive directionality "to here". Parsings for huālcholoa: '), nl,
-    write_parses(Parses).
+% 6.2: VNC Transitive Monadic
+test(vnc_transitive_monadic) :-
+    must_parse('tlachīhuah').
 
-% 8.1.1
-test_intransitive_directionality_to_there :- 
-    findall(P, parse(tonpanōzqueh, P), Parses),
-    write('Intransitive directionality "to there". Parsings for tonpanōzqueh: '), nl,
-    write_parses(Parses).
+% 6.3: VNC Transitive Dyadic
+test(vnc_transitive_dyadic) :-
+    must_parse('nimitztlazohtla').
 
-% 8.1.1
-test_transitive_directionality_to_here :- 
-    findall(P, parse(niconnequi, P), Parses),
-    write('Intransitive directionality "to here". Parsings for niconnequi: '), nl,
-    write_parses(Parses).
+% VNC with negativizing prefix
+test(vnc_with_negativizing_prefix) :-
+    must_parse('ahnamēchtlazohtla').
 
-% 8.1.1
-test_transitive_directionality_to_there :- 
-    findall(P, parse(nihuālmonequi, P), Parses),
-    write('Intransitive directionality "to there". Parsings for nihuālmonequi: '), nl,
-    write_parses(Parses).
+% 6.3: VNC Transitive Dyadic (variant)
+test(vnc_transitive_dyadic_variation) :-
+    must_parse('namextlazohtla').
 
-% 8.1.3
-test_vnc_with_antecessive_and_negativizing_particles :- 
-    findall(P, parse(ahōnamēchtlazohtla, P), Parses),
-    write('VNC 1 (dyadic valence). Parsings for ahōnamēchtlazohtla: '), nl,
-    write_parses(Parses).
+% 6.6: VNC Intransitive Reflexive
+test(vnc_intransitive_reflexive) :-
+    must_parse('mozōmāz').
 
-% 14.2
-test_absolutive_stem_nnc_in :-
-    findall(P, parse(michin, P), Parses),
-    write('Absolutive stem NNC. Parsings for michin: '), nl,
-    write_parses(Parses).
+% 8.1.1: Intransitive directionality "to here"
+test(intransitive_dir_to_here) :-
+    must_parse('huālcholoa').
 
-% 14.2
-test_absolutive_stem_nnc_zero :-
-    findall(P, parse(chichi, P), Parses),
-    write('Absolutive stem NNC. Parsings for chichi: '), nl,
-    write_parses(Parses).
+% 8.1.1: Intransitive directionality "to there"
+test(intransitive_dir_to_there) :-
+    must_parse('tonpanōzqueh').
 
-% 14.3.1
-test_absolutive_stem_nnc_affinity_singular :-
-    findall(P, parse(cācalli, P), Parses),
-    write('Absolutive stem NNC, affinity singular. Parsings for cācalli: '), nl,
-    write_parses(Parses).
+% 8.1.1: Transitive directionality "to here"
+test(transitive_dir_to_here) :-
+    must_parse('niconnequi').
 
-% 14.3.2
-test_absolutive_stem_nnc_distributive_singular :-
-    findall(P, parse(cahcalli, P), Parses),
-    write('Absolutive stem NNC, distributive singular. Parsings for cahcalli: '), nl,
-    write_parses(Parses).
+% 8.1.1: Transitive reflexive directionality "to here"
+test(transitive_reflexive_dir_to_here) :-
+    must_parse('nihuālmonequi').
 
-% 14.4
-test_absolutive_stem_nnc_with_singular_subject:-
-    findall(P, parse(ticihuātl, P), Parses),
-    write('Absolutive stem NNC, singular subject. Parsings for ticihuātl: '), nl,
-    write_parses(Parses).
+% 8.1.3: VNC with antecessive and negativizing prefixes
+test(vnc_with_antecessive_and_negativizing) :-
+    must_parse('ahōnamēchtlazohtla').
 
-% 14.5
-test_absolutive_stem_nnc_with_plural_subject:-
-    findall(P, parse(titlācah, P), Parses),
-    write('Absolutive stem NNC, plural subject. Parsings for titlācah: '), nl,
-    write_parses(Parses).
+% 14.2: Absolutive stem NNC (in)
+test(nnc_abs_in) :-
+    must_parse('michin').
 
-% 14.6
-test_plural_possessive_state_nnc :-
-    findall(P, parse(tīcihuāhuan, P), Parses),
-    write('Possessive state NNC. Parsings for tīcihuāhuan: '), nl,
-    write_parses(Parses).
+% 14.2: Absolutive stem NNC (zero)
+test(nnc_abs_zero) :-
+    must_parse('chichi').
 
-% 14.7
-test_singular_possessive_state_nnc :-
-    findall(P, parse(mochichi, P), Parses),
-    write('Possessive state NNC. Parsings for mochichi: '), nl,
-    write_parses(Parses).
+% 14.3.1: Absolutive stem NNC (affinity singular)
+test(nnc_abs_affinity_singular) :-
+    must_parse('cācalli').
 
-% 28.11
-test_intransitive_future_embed_compound :- 
-    findall(P, parse(nicochiznequiya, P), Parses),
-    write('Future embed compound. Parsings for nicochiznequiya: '), nl,
-    write_parses(Parses).
+% 14.3.2: Absolutive stem NNC (distributive singular)
+test(nnc_abs_distributive_singular) :-
+    must_parse('cahcalli').
 
-% 28.11
-test_transitive_future_embed_compound :- 
-    findall(P, parse(niquihcuilōznequi, P), Parses),
-    write('Future embed compound. Parsings for niquihcuilōznequi: '), nl,
-    write_parses(Parses).
+% 14.4: Absolutive stem NNC with singular subject
+test(nnc_abs_singular_subject) :-
+    must_parse('ticihuātl').
 
-% 28.11
-test_passive_future_embed_compound :- 
-    findall(P, parse(niquihcuilōlōznequi, P), Parses),
-    write('Future embed compound. Parsings for niquihcuilōlōznequi: '), nl,
-    write_parses(Parses).
+% 14.5: Absolutive stem NNC with plural subject
+test(nnc_abs_plural_subject) :-
+    must_parse('titlācah').
 
-% 31.4
-test_nominal_embed_compound :-
-    findall(P, parse(exōtl, P), Parses),
-    write('Future embed compound. Parsings for exōtl: '), nl,
-    write_parses(Parses).
+% 14.6: Plural possessive state NNC
+test(nnc_poss_plural) :-
+    must_parse('tīcihuāhuan').
 
-% 31.4
-test_plural_nominal_embed_compound :-
-    findall(P, parse(tetlācacihuāmeh, P), Parses),
-    write('Future embed compound. Parsings for tetlācacihuāmeh: '), nl,
-    write_parses(Parses).
+% 14.7: Singular possessive state NNC
+test(nnc_poss_singular) :-
+    must_parse('mochichi').
 
-% misc
-test_stem_long_final_vowel_shortened :- 
-    findall(P, parse(nitemo, P), Parses),
-    write('Stem with long final vowel (shortened). Parsings for nitemo: '), nl,
-    write_parses(Parses).
+% 28.11: Intransitive future embed compound
+test(vnc_intransitive_future_embed) :-
+    must_parse('nicochiznequiya').
 
-% misc
-test_stem_long_final_vowel_unshortened :- 
-    findall(P, parse(nitemōni, P), Parses),
-    write('Stem with long final vowel (unshortened). Parsings for nitemōni: '), nl,
-    write_parses(Parses).
+% 28.11: Transitive future embed compound
+test(vnc_transitive_future_embed) :-
+    must_parse('niquihcuilōznequi').
 
-% negative tests that can be run manually
-test_valence_on_intransitive :- 
-    findall(P, parse(nictemō, P), Parses),
-    write('Valence on intransitive should fail. Parsings for nictemō: '), nl,
-    write_parses(Parses).
+% 28.11: Passive future embed compound
+test(vnc_passive_future_embed) :-
+    must_parse('niquihcuilōlōznequi').
 
-test_valence_on_intransitive_future_embed_compound :- 
-    findall(P, parse(niccochiznequiya, P), Parses),
-    write('Future embed compound. Parsings for niccochiznequiya: '), nl,
-    write_parses(Parses).
+% 31.4: Nominal embed compound
+test(nnc_nominal_embed) :-
+    must_parse('exōtl').
 
-% Helper to write parse results
-write_parses([]) :- 
-    write('No parses found.'), nl, nl, !.
-write_parses([P|Ps]) :- 
-    write('  '), write(P), nl,
-    write_parses(Ps),
-    nl.
+% 31.4: Plural nominal embed compound
+test(nnc_plural_nominal_embed) :-
+    must_parse('tetlācacihuāmeh').
 
-run_tests :-
-    write('Running all tests...'), nl, nl,
-    test_particle,
-    test_particle_with_prefix,
-    test_particle_with_suffix,
-    test_vnc_intransitive,
-    test_vnc_transitive_monadic,
-    test_vnc_transitive_dyadic,
-    test_vnc_with_negativizing_particle,
-    test_vnc_transitive_dyadic_with_variation,
-    test_vnc_intransitive_reflexive,
-    test_intransitive_directionality_to_here,
-    test_intransitive_directionality_to_there,
-    test_transitive_directionality_to_here,
-    test_transitive_directionality_to_there,
-    test_vnc_with_antecessive_and_negativizing_particles,
-    test_absolutive_stem_nnc_in,
-    test_absolutive_stem_nnc_zero,
-    test_absolutive_stem_nnc_affinity_singular,
-    test_absolutive_stem_nnc_distributive_singular,
-    test_absolutive_stem_nnc_with_singular_subject,
-    test_absolutive_stem_nnc_with_plural_subject,
-    test_plural_possessive_state_nnc,
-    test_singular_possessive_state_nnc,
-    test_intransitive_future_embed_compound,
-    test_transitive_future_embed_compound,
-    test_passive_future_embed_compound,
-    test_stem_long_final_vowel_shortened,
-    test_stem_long_final_vowel_unshortened,
-    test_nominal_embed_compound,
-    test_plural_nominal_embed_compound,
-    write('All tests completed.'), nl.
+% Misc: Phonology - Final vowel shortening
+test(phonology_final_vowel_shortened) :-
+    must_parse('nitemo').
+
+% Misc: Phonology - No shortening
+test(phonology_no_shortening) :-
+    must_parse('nitemōni').
+
+% --- Negative Tests (These *should* fail to parse) ---
+
+test(fail_valence_on_intransitive) :-
+    must_not_parse('nictemō').
+
+test(fail_valence_on_intransitive_embed) :-
+    must_not_parse('niccochiznequiya').
+
+:- end_tests(parser_tests).

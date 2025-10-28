@@ -581,7 +581,7 @@ possessive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
     
     % 2. Parse State (StateType)
     % Rest1 = State + StemWithNums
-    parse_state_and_stem(Rest1, StateType, StateStr, StemWithNums),
+    parse_state_and_stem(Rest1, StateType, _, StemWithNums),
     
     % 3. Parse Numbers (Num1 + Num2) from the end of StemWithNums
     nnc_nums(Nums),
@@ -591,7 +591,7 @@ possessive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
     
     % 4. Identify Stem (StemStr) and its properties
     ( % Regular noun stem
-    noun_stem_type(PlainStem, Class, AffinityStem, DistributiveVarietalStem, Animacy),
+    noun_stem_type(PlainStem, _, AffinityStem, DistributiveVarietalStem, Animacy),
     % If singular (num1 not 'hu')
     ( \+ Num1 = 'hu' ->
         ( % Plain stem (the default)
@@ -613,7 +613,7 @@ possessive_state_nnc(Vocable, nnc(Pers1Type, Predicate, Nums)) :-
         )
     )
     ; % Compound stem
-        compound_nnc_stem(StemStr, StemStructure, Class, Animacy),
+        compound_nnc_stem(StemStr, StemStructure, _, Animacy),
         ( Num1 = 'hu' ->
             % Plural compound: Animacy must be animate
             Animacy = animate
