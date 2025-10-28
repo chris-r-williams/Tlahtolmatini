@@ -66,8 +66,8 @@ test(intransitive_dir_to_here) :-
 test(intransitive_dir_to_there) :-
     must_parse('tonpanōzqueh').
 
-% 8.1.1: Transitive directionality "to here"
-test(transitive_dir_to_here) :-
+% 8.1.1: Transitive directionality "to there"
+test(transitive_dir_to_there) :-
     must_parse('niconnequi').
 
 % 8.1.1: Transitive reflexive directionality "to here"
@@ -102,6 +102,10 @@ test(nnc_abs_singular_subject) :-
 test(nnc_abs_plural_subject) :-
     must_parse('titlācah').
 
+% Absolutive with nominal embed
+test(nnc_abs_nominal_embed) :-
+    must_parse('tipahcihuātl').
+
 % 14.6: Plural possessive state NNC
 test(nnc_poss_plural) :-
     must_parse('tīcihuāhuan').
@@ -109,6 +113,10 @@ test(nnc_poss_plural) :-
 % 14.7: Singular possessive state NNC
 test(nnc_poss_singular) :-
     must_parse('mochichi').
+
+% Possessive with nominal embed
+test(nnc_poss_nominal_embed) :-
+    must_parse('tītōchcihuāhuan').
 
 % 28.11: Intransitive future embed compound
 test(vnc_intransitive_future_embed) :-
@@ -145,5 +153,17 @@ test(fail_valence_on_intransitive) :-
 
 test(fail_valence_on_intransitive_embed) :-
     must_not_parse('niccochiznequiya').
+
+test(fail_no_valence_on_transitive) :-
+    must_not_parse('nichīhua').
+
+test(fail_nnc_with_wrong_absolutive) :-
+    must_not_parse('michtl').
+
+test(fail_inanimate_absolutive_with_plural_suffix) :-
+    must_not_parse('pahmeh').
+
+test(fail_inanimate_possessive_with_plural_suffix) :-
+    must_not_parse('nopahhuan').
 
 :- end_tests(parser_tests).
