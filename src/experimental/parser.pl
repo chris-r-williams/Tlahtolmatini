@@ -762,23 +762,90 @@ valid_possessive_nnc_combo(pers_zero, 'hui', '').
 valid_possessive_nnc_combo(pers_zero, '', '').
 valid_possessive_nnc_combo(pers_zero, 'hu', 'an').
 
-% plain stem, class, affinity stem, distributive/varietal stem
-noun_stem_type('ā', 'tl', 'āā', 'ahā', inanimate).
-noun_stem_type('cal', 'li', 'cācal', 'cahcal', inanimate).
-noun_stem_type('chichi', '', 'chīchichi', 'chihchichi', animate).
-noun_stem_type('cihuā', 'tl', 'cīcihuā', 'cihcihuā', animate).
-noun_stem_type('e', 'tl', 'ēe', 'ehe', inanimate).
-noun_stem_type('pah', 'tli', 'pāpah', 'pahpah', inanimate).
-noun_stem_type('me', 'tl', 'mēme', 'mehme', inanimate).
-noun_stem_type('mich', 'in', 'mīmich', 'mihmich', animate).
-noun_stem_type('tah', 'tli', 'tātah', 'tahtah', animate).
-noun_stem_type('temol', 'in', 'tētemol', 'tehtemol', animate).
-noun_stem_type('temol', 'li', 'tētemol', 'tehtemol', animate).
-noun_stem_type('te', 'tl', 'tēte', 'tehte', animate). % means rock but Molina gives animate form
-noun_stem_type('tlāca', 'tl', 'tlātlaca', 'tlahtlāca', animate).
-noun_stem_type('tōch', 'in', 'tōtōch', 'tohtōch', animate).
-noun_stem_type('tōch', 'tli', 'tōtōch', 'tohtōch', animate).
-noun_stem_type('xō', 'tl', 'xōxō', 'xohxō', inanimate).
+% noun_stem_type(PlainStem, Class, AffinityStem, DistributiveVarietalStem, Animacy).
+% Plain stems, class, affinity stem, and distributive/varietal stem are used for NNC parsing.
+
+% ============================================================================
+% ALPHABETIZED NAHUATL NOUN LEXICON
+% ============================================================================
+noun_stem_type('ā', 'tl', 'āā', 'ahā', inanimate).             % water
+noun_stem_type('ahci', 'tl', 'āahci', 'ahahci', animate).       % bird, perhaps a typo for 'ahuitl' - correcting to 'ahui'
+noun_stem_type('ahui', 'tl', 'āahui', 'ahahui', animate).     % aunt, sister-in-law
+noun_stem_type('ama', 'tl', 'āama', 'ahama', inanimate).     % paper, book
+noun_stem_type('amox', 'tli', 'āamox', 'ahamox', inanimate).   % book
+noun_stem_type('ayo', 'tl', 'āayo', 'ahayo', inanimate).       % squash, gourd
+noun_stem_type('cacaō', 'tl', 'cācaō', 'cahcaō', inanimate).   % cacao bean
+noun_stem_type('cahuayo', '', 'cācahuayo', 'cahcahuayo', animate). % horse (loan)
+noun_stem_type('cal', 'li', 'cācal', 'cahcal', inanimate).     % house
+noun_stem_type('camoh', 'tli', 'cācamoh', 'cahcamoh', inanimate). % sweet potato
+noun_stem_type('chichi', '', 'chīchichi', 'chihchichi', animate). % dog
+noun_stem_type('cihuā', 'tl', 'cīcihuā', 'cihcihuā', animate). % woman
+noun_stem_type('citlal', 'in', 'cīcitlal', 'cihcitlal', inanimate). % star
+noun_stem_type('coa', 'tl', 'cōcoa', 'cohcoa', animate).       % snake (from cohuatl)
+noun_stem_type('cone', 'tl', 'cōcone', 'cohcone', animate).     % child
+noun_stem_type('cotomi', 'tl', 'cōcotomi', 'cohcotomi', inanimate). % cotton garment
+noun_stem_type('cahuayoh', '', 'cācahuayo', 'cahcahuayo', animate). % horse (using cahuayoh/no class marker)
+noun_stem_type('coyō', 'tl', 'cōcoyo', 'cohcoyo', animate).     % coyote
+noun_stem_type('cuahhui', 'tl', 'cuācuahhui', 'cuahcuahhui', inanimate). % tree, wood
+noun_stem_type('cuapuert', '', 'cuāpuert', 'cuahpuert', inanimate). % door (loan)
+noun_stem_type('cuei', 'tl', 'cūcuei', 'cuhcuei', inanimate).   % skirt
+noun_stem_type('e', 'tl', 'ēe', 'ehe', inanimate).             % bean
+noun_stem_type('eheca', 'tl', 'ēeheca', 'eheca', animate).     % wind
+noun_stem_type('ichca', 'tl', 'īichca', 'ihichca', animate).   % sheep, cotton
+noun_stem_type('ichpoca', 'tl', 'īichpoca', 'ihichpoca', animate). % young woman
+noun_stem_type('icniu', '', 'īicniu', 'ihicniu', animate).     % friend
+noun_stem_type('macehual', 'li', 'māmacehual', 'mahmacehual', animate). % commoner
+noun_stem_type('maxochi', 'tl', 'māmāxochi', 'mahmāxochi', inanimate). % flower
+noun_stem_type('me', 'tl', 'mēme', 'mehme', inanimate).         % maguey
+noun_stem_type('mexihca', 'tl', 'mēmexihca', 'mehmexihca', animate). % Mexica person
+noun_stem_type('mexihco', '', 'mexihco', 'mexihco', inanimate). % Mexico City
+noun_stem_type('mich', 'in', 'mīmich', 'mihmich', animate).     % fish
+noun_stem_type('mizto', 'n', 'mīmizto', 'mihmizto', animate).   % cat
+noun_stem_type('naca', 'tl', 'nānaca', 'naca', inanimate).     % meat
+noun_stem_type('nacaz', 'tli', 'nānacaz', 'nahnacaz', inanimate). % ear
+noun_stem_type('necu', 'tli', 'nēnecu', 'nehnēcu', inanimate).   % honey
+noun_stem_type('nemilis', 'tli', 'nēnemilis', 'nehnemilis', inanimate). % life
+noun_stem_type('ocuil', 'in', 'ōocuil', 'ohocuil', animate).     % worm
+noun_stem_type('oh', 'tli', 'ōoh', 'ohoh', inanimate).         % road, path
+noun_stem_type('oquich', 'tli', 'ōoquich', 'ohoquich', animate). % man
+noun_stem_type('otomi', 'tl', 'ōotomi', 'ohotomi', animate).     % Otomi person
+noun_stem_type('pah', 'tli', 'pāpah', 'pahpah', inanimate).     % medicine
+noun_stem_type('pami', 'tl', 'pāpami', 'pahpami', inanimate).   % banner
+noun_stem_type('pantalo', '', 'pāntalo', 'pahtalo', inanimate). % trousers (loan)
+noun_stem_type('papalo', 'tl', 'pāpapalo', 'pahpapalo', animate). % butterfly
+noun_stem_type('pato', 'tl', 'pāpato', 'pahpato', animate).     % duck
+noun_stem_type('pil', 'li', 'pīpil', 'pihpil', animate).       % noble, child
+noun_stem_type('pitzo', 'tl', 'pīpitzo', 'pihpitzo', animate).   % pig
+noun_stem_type('quetzalcōā', 'tl', 'quetzalcōcōā', 'quetzalcohcoa', animate). % Quetzalcoatl
+noun_stem_type('tah', 'tli', 'tātah', 'tahtah', animate).     % father
+noun_stem_type('tamal', 'li', 'tātamal', 'tahtamal', inanimate). % tamal
+noun_stem_type('tecac', 'tli', 'tētecac', 'tehtecac', inanimate). % sandal, shoe
+noun_stem_type('telpoca', 'tl', 'tētelpoca', 'tehtelpoca', animate). % young man
+noun_stem_type('te', 'tl', 'tēte', 'tehte', animate).         % rock (animate class)
+noun_stem_type('teō', 'tl', 'tētēō', 'tehtēō', animate).       % god
+noun_stem_type('tepe', 'tl', 'tētepe', 'tehtepe', inanimate).   % mountain
+noun_stem_type('tepoz', 'tli', 'tētepoz', 'tehtepoz', inanimate). % metal, iron
+noun_stem_type('temol', 'in', 'tētemol', 'tehtemol', animate). % louse (Class -in)
+noun_stem_type('temol', 'li', 'tētemol', 'tehtemol', animate). % louse (Class -li)
+noun_stem_type('tlāl', 'li', 'tlal', 'tlal', inanimate).       % earth, land
+noun_stem_type('tlāca', 'tl', 'tlātlaca', 'tlahtlāca', animate). % person
+noun_stem_type('tlaxcallan', '', 'tlaxcallan', 'tlaxcallan', inanimate). % Tlaxcala (place name)
+noun_stem_type('tōch', 'in', 'tōtōch', 'tohtōch', animate).     % rabbit (Class -in)
+noun_stem_type('tōch', 'tli', 'tōtōch', 'tohtōch', animate).     % rabbit (Class -tli)
+noun_stem_type('toca', 'tl', 'tōtoca', 'tohtoca', animate).     % spider
+noun_stem_type('tonatiuh', '', 'tōtonatiuh', 'tohtonatiuh', animate). % sun
+noun_stem_type('toro', 'tl', 'tōtoro', 'tohtoro', animate).     % bull (loan)
+noun_stem_type('toto', 'tl', 'tōtoto', 'tohtoto', animate).     % bird
+noun_stem_type('tzapotl', 'tl', 'tzātzapotl', 'tzahtzapotl', inanimate). % sapote fruit
+noun_stem_type('tzoncal', 'li', 'tzōtzoncal', 'tzohtzoncal', inanimate). % hair
+noun_stem_type('xal', 'li', 'xāxal', 'xahxal', inanimate).     % sand
+noun_stem_type('xaya', 'tl', 'xāxaya', 'xahxaya', inanimate).   % face, mask
+noun_stem_type('xihui', 'tl', 'xīxihui', 'xihxihui', inanimate). % year, grass, turquoise (using xiuh for stem)
+noun_stem_type('xō', 'tl', 'xōxō', 'xohxō', inanimate).         % ear of corn
+noun_stem_type('yacatzol', 'li', 'yāyacatzol', 'yahyacatzol', inanimate). % nose
+noun_stem_type('zacā', 'tl', 'zāzacā', 'zahzacā', inanimate).   % grass, fodder
+noun_stem_type('zayol', 'in', 'zāzayol', 'zahzayol', animate).   % fly
+noun_stem_type('zoqui', 'tl', 'zōzoqui', 'zohzoqui', inanimate). % mud
 
 % ============================================================================
 % SHARED FACTS
@@ -841,22 +908,61 @@ surface_to_underlying(Surface, Underlying) :-
 % ============================================================================
 % verb_stem_type(Verb, ImperfectiveStem, PerfectiveStem, HypotheticalStem, Class, TransitivityType)
 
-% Each verb stem has three types that verbs can be built from, plus a class and transitivity
+% ============================================================================
+% INTRANSITIVE VERBS
+% (Alphabetized by Verb Root)
+% ============================================================================
+verb_stem_type(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, intransitive). % to be strong
+verb_stem_type(choca, 'choca', 'chocac', 'choca', a1, intransitive).   % to cry
+verb_stem_type(choloa, 'choloā', 'choloh', 'cholō', c, intransitive).   % to flee, run away
+verb_stem_type(cochi, 'cochi', 'cochic', 'cochi', a1, intransitive).   % to sleep
+verb_stem_type(cuica, 'cuīca', 'cuīcac', 'cuīca', b, intransitive).     % to sing
+verb_stem_type(ehua, 'ēhua', 'eh', 'ēhuā', c, intransitive).           % to rise, leave
+verb_stem_type(huitoni, 'huītoni', 'huītonic', 'huītoni', a1, intransitive). % to dance
+verb_stem_type(huitz, 'huītz', 'huītz', 'huītz', b, intransitive).     % to come (irregular)
+verb_stem_type(ihcihui, 'ihcihui', 'ihcihuic', 'ihcihui', a1, intransitive). % to hurry
+verb_stem_type(miqui, 'miqui', 'mic', 'miqui', a1, intransitive).     % to die
+verb_stem_type(motlaloa, 'motlaloā', 'motlaloh', 'motlalō', c, intransitive). % to run
+verb_stem_type(neci, 'neci', 'nec', 'neci', a1, intransitive).         % to appear
+verb_stem_type(nehnemi, 'nēhnemi', 'nēhnemic', 'nēhnemi', a1, intransitive). % to walk around
+verb_stem_type(nemi, 'nemi', 'nemic', 'nemi', a1, intransitive).       % to walk, live
+verb_stem_type(pano, 'panō', 'panōc', 'panō', b, intransitive).         % to pass, cross
+verb_stem_type(quiza, 'quiza', 'quizac', 'quiza', a1, intransitive).   % to leave, exit
+verb_stem_type(temo, 'temō', 'temōc', 'temō', a2, intransitive).       % to descend
+verb_stem_type(tetiya, 'tētiya', 'tētiyac', 'tētiya', a1, intransitive). % to harden
+verb_stem_type(tzahtzi, 'tzahtzi', 'tzahtzic', 'tzahtzi', a1, intransitive). % to shout
+verb_stem_type(yoli, 'yōli', 'yōlic', 'yōli', a1, intransitive).       % to live
 
-verb_stem_type(temo, 'temō', 'temōc', 'temō', a2, intransitive).
-verb_stem_type(ihcuiloa, 'ihcuiloā', 'ihcuiloh', 'ihcuilō', c, transitive).
-verb_stem_type(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, transitive).
-verb_stem_type(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, intransitive).
-verb_stem_type(chihua, 'chīhua', 'chīhuac', 'chīhuā', b, transitive).
-verb_stem_type(tlazohtla, 'tlazohtlā', 'tlazohtlac', 'tlazohtlā', b, transitive).
-verb_stem_type(zoma, 'zōmā', 'zōmah', 'zōmā', b, transitive).
-verb_stem_type(choloa, 'choloā', 'choloh', 'cholō', c, intransitive).
-verb_stem_type(pano, 'panō', 'panōc', 'panō', b, intransitive).
-verb_stem_type(nequi, 'nequi', 'nec', 'nequi', b, transitive).
-verb_stem_type(qui, 'qui', 'quic', 'qui', b, transitive).
-verb_stem_type(cochi, 'cochi', 'cochic', 'cochi', a1, intransitive).
-verb_stem_type(cuica, 'cuīca', 'cuīcac', 'cuīca', b, intransitive).
-verb_stem_type(cua, 'cuā', 'cuah', 'cuā', b, transitive).
+% ============================================================================
+% TRANSITIVE VERBS
+% (Alphabetized by Verb Root)
+% ============================================================================
+verb_stem_type(ahci, 'ahci', 'ahcic', 'ahci', a1, transitive).         % to arrive, reach (T)
+verb_stem_type(ahhua, 'ahhua', 'ahhuac', 'ahhua', a1, transitive).     % to scold
+verb_stem_type(ana, 'ana', 'anac', 'ana', a1, transitive).             % to take, grasp
+verb_stem_type(caqui, 'caqui', 'cac', 'caqui', a1, transitive).         % to hear, understand
+verb_stem_type(chicahua, 'chicāhua', 'chicāhuac', 'chicāhua', b, transitive). % to strengthen
+verb_stem_type(chihua, 'chīhua', 'chīhuac', 'chīhuā', b, transitive).   % to make, do
+verb_stem_type(cocoa, 'cocoā', 'cocoh', 'cocō', c, transitive).         % to harm
+verb_stem_type(cocolia, 'cocoliā', 'cocolih', 'cocoliā', c, transitive). % to hate
+verb_stem_type(cohua, 'cohua', 'cohua', 'cohua', a1, transitive).       % to buy
+verb_stem_type(cua, 'cuā', 'cuah', 'cuā', b, transitive).               % to eat
+verb_stem_type(cui, 'cui', 'cuic', 'cui', a1, transitive).             % to take, get
+verb_stem_type(i, 'ī', 'ih', 'īh', b, transitive).                      % to drink
+verb_stem_type(ihcuiloa, 'ihcuiloā', 'ihcuiloh', 'ihcuilō', c, transitive). % to write
+verb_stem_type(ihtoa, 'ihtoā', 'ihtoh', 'ihtō', c, transitive).         % to say, speak
+verb_stem_type(illia, 'illia', 'illi', 'illi', a1, transitive).         % to tell (someone)
+verb_stem_type(itta, 'itta', 'ittac', 'itta', a1, transitive).         % to see
+verb_stem_type(machtia, 'machtiā', 'machtih', 'machtiā', c, transitive). % to teach
+verb_stem_type(mati, 'mati', 'matc', 'mati', a1, transitive).           % to know
+verb_stem_type(nequi, 'nequi', 'nec', 'nequi', b, transitive).         % to want
+verb_stem_type(notza, 'notza', 'notzac', 'notza', a1, transitive).     % to call, summon
+verb_stem_type(qui, 'qui', 'quic', 'qui', b, transitive).               % to say (often used with tla-)
+verb_stem_type(tequihuia, 'tequihuīa', 'tequihuīh', 'tequihuī', c, transitive). % to use, work with
+verb_stem_type(tlatia, 'tlatīa', 'tlatīh', 'tlatī', c, transitive).     % to hide (something)
+verb_stem_type(tlazohtla, 'tlazohtlā', 'tlazohtlac', 'tlazohtlā', b, transitive). % to love
+verb_stem_type(tzacui, 'tzacui', 'tzacuic', 'tzacui', a1, transitive).   % to close
+verb_stem_type(zoma, 'zōmā', 'zōmah', 'zōmā', b, transitive).           % to anger (transitivized)
 
 % ============================================================================
 % VNC PARADIGMS from APPENDIX A
