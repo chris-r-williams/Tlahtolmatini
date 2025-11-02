@@ -67,6 +67,7 @@ particle('ax').
 particle('aya').
 particle('ayoc').
 particle('ca').
+particle('cānin'). % Andrews says this is actually "cān in" but it is often written as a single interrogative particle
 particle('cuix').
 particle('elele').
 particle('hue').
@@ -497,6 +498,10 @@ expanded_nnc(Vocable, [antecessive_order_prefix, NNC]) :-
     antecessive_order_prefix(Prefix),
     atom_concat(Prefix, Rest, Vocable),
     nnc(Rest, NNC).
+expanded_nnc(Vocable, [negativizing_prefix, NNC]) :-
+    negativizing_prefix(Prefix),
+    atom_concat(Prefix, Rest, Vocable),
+    nnc(Rest, NNC).
 expanded_nnc(Vocable, Parse) :-
     nnc(Vocable, Parse).
 
@@ -770,14 +775,17 @@ valid_possessive_nnc_combo(pers_zero, 'hu', 'an').
 % ============================================================================
 noun_stem_type('ā', 'tl', 'āā', 'ahā', inanimate).             % water
 noun_stem_type('ahci', 'tl', 'āahci', 'ahahci', animate).       % bird, perhaps a typo for 'ahuitl' - correcting to 'ahui'
-noun_stem_type('ahui', 'tl', 'āahui', 'ahahui', animate).     % aunt, sister-in-law
+noun_stem_type('āhui', 'tl', 'āāhui', 'ahāhui', animate).     % aunt, sister-in-law
 noun_stem_type('ama', 'tl', 'āama', 'ahama', inanimate).     % paper, book
-noun_stem_type('amox', 'tli', 'āamox', 'ahamox', inanimate).   % book
+noun_stem_type('āmox', 'tli', 'āāmox', 'ahāmox', inanimate).   % book
 noun_stem_type('ayo', 'tl', 'āayo', 'ahayo', inanimate).       % squash, gourd
-noun_stem_type('cacaō', 'tl', 'cācaō', 'cahcaō', inanimate).   % cacao bean
+noun_stem_type('cacahua', 'tl', 'cācacahua', 'cahcacahua', inanimate).  % cacao
+noun_stem_type('cacaoh', '', 'cācaoh', 'cahcaoh', inanimate).   % cacao bean
 noun_stem_type('cahuayo', '', 'cācahuayo', 'cahcahuayo', animate). % horse (loan)
 noun_stem_type('cal', 'li', 'cācal', 'cahcal', inanimate).     % house
 noun_stem_type('camoh', 'tli', 'cācamoh', 'cahcamoh', inanimate). % sweet potato
+noun_stem_type('cē', '', '', '', cardinal). % one (matrix form)
+noun_stem_type('cem', '', 'cem', 'cem', cardinal). % one (embed form)
 noun_stem_type('chichi', '', 'chīchichi', 'chihchichi', animate). % dog
 noun_stem_type('cihuā', 'tl', 'cīcihuā', 'cihcihuā', animate). % woman
 noun_stem_type('citlal', 'in', 'cīcitlal', 'cihcitlal', inanimate). % star
@@ -790,10 +798,13 @@ noun_stem_type('cuahhui', 'tl', 'cuācuahhui', 'cuahcuahhui', inanimate). % tree
 noun_stem_type('cuapuert', '', 'cuāpuert', 'cuahpuert', inanimate). % door (loan)
 noun_stem_type('cuei', 'tl', 'cūcuei', 'cuhcuei', inanimate).   % skirt
 noun_stem_type('e', 'tl', 'ēe', 'ehe', inanimate).             % bean
+noun_stem_type('ē', 'tl', 'ēē', 'ehē', inanimate).             % bean
 noun_stem_type('eheca', 'tl', 'ēeheca', 'eheca', animate).     % wind
+noun_stem_type('huēi', '', 'huēi', 'huēi', adjective).       % big
+noun_stem_type('huēyi', '', 'huēyi', 'huēyi', adjective).       % big
 noun_stem_type('ichca', 'tl', 'īichca', 'ihichca', animate).   % sheep, cotton
 noun_stem_type('ichpoca', 'tl', 'īichpoca', 'ihichpoca', animate). % young woman
-noun_stem_type('icniu', '', 'īicniu', 'ihicniu', animate).     % friend
+noun_stem_type('icniuh', '', 'īicniuh', 'ihicniuh', animate).     % friend
 noun_stem_type('macehual', 'li', 'māmacehual', 'mahmacehual', animate). % commoner
 noun_stem_type('maxochi', 'tl', 'māmāxochi', 'mahmāxochi', inanimate). % flower
 noun_stem_type('me', 'tl', 'mēme', 'mehme', inanimate).         % maguey
@@ -801,9 +812,11 @@ noun_stem_type('mexihca', 'tl', 'mēmexihca', 'mehmexihca', animate). % Mexica p
 noun_stem_type('mexihco', '', 'mexihco', 'mexihco', inanimate). % Mexico City
 noun_stem_type('mich', 'in', 'mīmich', 'mihmich', animate).     % fish
 noun_stem_type('mizto', 'n', 'mīmizto', 'mihmizto', animate).   % cat
+noun_stem_type('mō', '', '', '', inanimate).   % probable
 noun_stem_type('naca', 'tl', 'nānaca', 'naca', inanimate).     % meat
 noun_stem_type('nacaz', 'tli', 'nānacaz', 'nahnacaz', inanimate). % ear
-noun_stem_type('necu', 'tli', 'nēnecu', 'nehnēcu', inanimate).   % honey
+noun_stem_type('nān', 'tli', 'nānān', 'nahnān', animate). % mother
+noun_stem_type('necuh', 'tli', 'nēnecuh', 'nehnēcuh', inanimate).   % honey
 noun_stem_type('nemilis', 'tli', 'nēnemilis', 'nehnemilis', inanimate). % life
 noun_stem_type('ocuil', 'in', 'ōocuil', 'ohocuil', animate).     % worm
 noun_stem_type('oh', 'tli', 'ōoh', 'ohoh', inanimate).         % road, path
@@ -814,8 +827,13 @@ noun_stem_type('pami', 'tl', 'pāpami', 'pahpami', inanimate).   % banner
 noun_stem_type('pantalo', '', 'pāntalo', 'pahtalo', inanimate). % trousers (loan)
 noun_stem_type('papalo', 'tl', 'pāpapalo', 'pahpapalo', animate). % butterfly
 noun_stem_type('pato', 'tl', 'pāpato', 'pahpato', animate).     % duck
+noun_stem_type('pīl', '', '', '', inanimate).       % honorific matrix stem
 noun_stem_type('pil', 'li', 'pīpil', 'pihpil', animate).       % noble, child
+noun_stem_type('pipīl', '', '', '', animate).       %  honorific plural matrix stem
 noun_stem_type('pitzo', 'tl', 'pīpitzo', 'pihpitzo', animate).   % pig
+noun_stem_type('pōl', '', '', '', inanimate).       % largeness/disparagement matrix stem
+noun_stem_type('pōl', 'li', '', '', inanimate).       % largeness/disparagement matrix stem
+noun_stem_type('popōl', '', '', '', animate).       % largeness/disparagement plural matrix stem
 noun_stem_type('quetzalcōā', 'tl', 'quetzalcōcōā', 'quetzalcohcoa', animate). % Quetzalcoatl
 noun_stem_type('tah', 'tli', 'tātah', 'tahtah', animate).     % father
 noun_stem_type('tamal', 'li', 'tātamal', 'tahtamal', inanimate). % tamal
@@ -833,18 +851,28 @@ noun_stem_type('tlaxcallan', '', 'tlaxcallan', 'tlaxcallan', inanimate). % Tlaxc
 noun_stem_type('tōch', 'in', 'tōtōch', 'tohtōch', animate).     % rabbit (Class -in)
 noun_stem_type('tōch', 'tli', 'tōtōch', 'tohtōch', animate).     % rabbit (Class -tli)
 noun_stem_type('toca', 'tl', 'tōtoca', 'tohtoca', animate).     % spider
+noun_stem_type('tomin', '', 'tōtomin', 'tohtomin', inanimate).     % money
 noun_stem_type('tonatiuh', '', 'tōtonatiuh', 'tohtonatiuh', animate). % sun
+noun_stem_type('tōn', '', '', '', inanimate). % diminutive matrix stem
+noun_stem_type('tōn', 'tli', '', '', inanimate). % diminutive matrix stem (with absolutive)
+noun_stem_type('totōn', 't', '', '', animate). % diminutive plural matrix stem
 noun_stem_type('toro', 'tl', 'tōtoro', 'tohtoro', animate).     % bull (loan)
-noun_stem_type('toto', 'tl', 'tōtoto', 'tohtoto', animate).     % bird
-noun_stem_type('tzapotl', 'tl', 'tzātzapotl', 'tzahtzapotl', inanimate). % sapote fruit
+noun_stem_type('tōtō', 'tl', 'tōtōtō', 'tohtōtō', animate).     % bird
+noun_stem_type('tzapo', 'tl', 'tzātzapotl', 'tzahtzapotl', inanimate). % sapote fruit
+noun_stem_type('tzin', '', '', '', inanimate). % honorific/diminutive matrix stem
+noun_stem_type('tzin', 'tli', '', '', inanimate). % honorific/diminutive matrix stem (with absolutive)
+noun_stem_type('tzitzin', '', '', '', animate). % honorific/diminutive plural matrix stem
 noun_stem_type('tzoncal', 'li', 'tzōtzoncal', 'tzohtzoncal', inanimate). % hair
 noun_stem_type('xal', 'li', 'xāxal', 'xahxal', inanimate).     % sand
 noun_stem_type('xaya', 'tl', 'xāxaya', 'xahxaya', inanimate).   % face, mask
 noun_stem_type('xihui', 'tl', 'xīxihui', 'xihxihui', inanimate). % year, grass, turquoise (using xiuh for stem)
 noun_stem_type('xō', 'tl', 'xōxō', 'xohxō', inanimate).         % ear of corn
+noun_stem_type('xoxoctic', '', 'xoxoctic', 'xoxoctic', adjective).       % green
 noun_stem_type('yacatzol', 'li', 'yāyacatzol', 'yahyacatzol', inanimate). % nose
+noun_stem_type('yayāhuic', '', 'yayāhuic', 'yayāhuic', adjective). % black
 noun_stem_type('zacā', 'tl', 'zāzacā', 'zahzacā', inanimate).   % grass, fodder
 noun_stem_type('zayol', 'in', 'zāzayol', 'zahzayol', animate).   % fly
+noun_stem_type('zol', 'li', '', '', inanimate).   % old, worn out thing (affective matrix stem)
 noun_stem_type('zoqui', 'tl', 'zōzoqui', 'zohzoqui', inanimate). % mud
 
 % ============================================================================
@@ -921,6 +949,7 @@ verb_stem_type(ehua, 'ēhua', 'eh', 'ēhuā', c, intransitive).           % to r
 verb_stem_type(huitoni, 'huītoni', 'huītonic', 'huītoni', a1, intransitive). % to dance
 verb_stem_type(huitz, 'huītz', 'huītz', 'huītz', b, intransitive).     % to come (irregular)
 verb_stem_type(ihcihui, 'ihcihui', 'ihcihuic', 'ihcihui', a1, intransitive). % to hurry
+verb_stem_type(lemeni, 'lemēni', 'lemēnic', 'lemēni', a1, intransitive). % to burn
 verb_stem_type(miqui, 'miqui', 'mic', 'miqui', a1, intransitive).     % to die
 verb_stem_type(motlaloa, 'motlaloā', 'motlaloh', 'motlalō', c, intransitive). % to run
 verb_stem_type(neci, 'neci', 'nec', 'neci', a1, intransitive).         % to appear
